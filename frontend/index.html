@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OmniAI - Intelligent Recommendation Agent</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>✨ OmniAI</h1>
+
+        <p class="subtitle">
+            Intelligent Recommendation Agent
+        </p>
+
+        <div class="search-box">
+
+            <textarea
+                id="userRequest"
+                placeholder="Example: I want a birthday dress under ₹2000 from Myntra"
+            ></textarea>
+
+            <button onclick="getRecommendations()">
+                Get Recommendations
+            </button>
+
+        </div>
+
+        <div id="loading"></div>
+
+        <div id="results"></div>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
