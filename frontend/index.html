@@ -1,1030 +1,3151 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>OmniAI - Intelligent Recommendation Agent</title>
-
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
-
-</head>
-
-
-<body>
-
-
-    <!-- =====================================================
-         NAVBAR
-    ====================================================== -->
-
-    <nav class="navbar">
-
-        <div class="logo">
-
-            <span class="logo-star">
-                ✦
-            </span>
-
-            OmniAI
-
-        </div>
-
-
-        <div class="nav-links">
-
-            <a href="#home">
-                Home
-            </a>
-
-            <a href="#categories">
-                Categories
-            </a>
-
-            <a href="#how-it-works">
-                How It Works
-            </a>
-
-            <a href="#about">
-                About
-            </a>
-
-        </div>
-
-
-        <button
-            type="button"
-            class="nav-button"
-            onclick="focusSearch()"
-        >
-            Try OmniAI →
-        </button>
-
-    </nav>
-
-
-
-    <!-- =====================================================
-         HERO
-    ====================================================== -->
-
-    <section
-        class="hero"
-        id="home"
-    >
-
-        <div class="gradient-orb orb-one"></div>
-        <div class="gradient-orb orb-two"></div>
-        <div class="gradient-orb orb-three"></div>
-
-
-        <div class="hero-content">
-
-
-            <!-- AI BADGE -->
-
-            <div class="ai-badge">
-
-                <span class="pulse-dot"></span>
-
-                ✨ AI-Powered Recommendation Agent
-
-            </div>
-
-
-
-            <!-- MAIN HEADING -->
-
-            <h1>
-
-                Find your
-
-                <span class="gradient-text">
-                    Best Choice
-                </span>
-
-                <br>
-
-                in seconds.
-
-            </h1>
-
-
-            <p class="hero-description">
-
-                Tell OmniAI what you need.
-                Type it, speak it, or simply describe your
-                requirements. Our intelligent agent searches
-                real results and recommends the best options.
-
-            </p>
-
-
-
-            <!-- =================================================
-                 SEARCH CARD
-            ================================================== -->
-
-            <div class="search-card">
-
-
-                <!-- SEARCH TOP -->
-
-                <div class="search-top">
-
-
-                    <div class="search-label">
-
-                        <span class="sparkle">
-                            ✦
-                        </span>
-
-                        What are you looking for?
-
-                    </div>
-
-
-
-                    <!-- LANGUAGE SELECTOR -->
-
-                    <div class="language-box">
-
-                        <span>
-                            🌍
-                        </span>
-
-
-                        <select
-                            id="languageSelect"
-                            aria-label="Select voice language"
-                        >
-
-                            <option value="en-IN">
-                                English — India
-                            </option>
-
-                            <option value="te-IN">
-                                తెలుగు — Telugu
-                            </option>
-
-                            <option value="hi-IN">
-                                हिन्दी — Hindi
-                            </option>
-
-                            <option value="ta-IN">
-                                தமிழ் — Tamil
-                            </option>
-
-                            <option value="kn-IN">
-                                ಕನ್ನಡ — Kannada
-                            </option>
-
-                            <option value="ml-IN">
-                                മലയാളം — Malayalam
-                            </option>
-
-                            <option value="bn-IN">
-                                বাংলা — Bengali
-                            </option>
-
-                            <option value="mr-IN">
-                                मराठी — Marathi
-                            </option>
-
-                            <option value="gu-IN">
-                                ગુજરાતી — Gujarati
-                            </option>
-
-                            <option value="pa-IN">
-                                ਪੰਜਾਬੀ — Punjabi
-                            </option>
-
-                            <option value="ur-IN">
-                                اردو — Urdu
-                            </option>
-
-                            <option value="en-US">
-                                English — US
-                            </option>
-
-                            <option value="fr-FR">
-                                Français — French
-                            </option>
-
-                            <option value="de-DE">
-                                Deutsch — German
-                            </option>
-
-                            <option value="es-ES">
-                                Español — Spanish
-                            </option>
-
-                            <option value="ja-JP">
-                                日本語 — Japanese
-                            </option>
-
-                            <option value="ko-KR">
-                                한국어 — Korean
-                            </option>
-
-                        </select>
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- =================================================
-                     INPUT AREA
-                ================================================== -->
-
-                <div class="input-wrapper">
-
-
-                    <textarea
-                        id="userRequest"
-                        name="userRequest"
-                        rows="4"
-                        placeholder="Example: I want a Google Pixel under ₹50,000 with a good camera..."
-                        autocomplete="off"
-                        spellcheck="true"
-                    ></textarea>
-
-
-
-                    <!-- =================================================
-                         MICROPHONE BUTTON
-                    ================================================== -->
-
-                    <button
-                        type="button"
-                        id="micButton"
-                        class="mic-button"
-                        onclick="startVoiceInput()"
-                        title="Speak your request"
-                        aria-label="Start voice input"
-                    >
-
-                        <span class="mic-icon">
-                            🎤
-                        </span>
-
-                        <span class="mic-waves">
-
-                            <i></i>
-                            <i></i>
-                            <i></i>
-                            <i></i>
-                            <i></i>
-
-                        </span>
-
-                    </button>
-
-                </div>
-
-
-
-                <!-- =================================================
-                     VOICE STATUS
-                ================================================== -->
-
-                <div
-                    id="voiceStatus"
-                    class="voice-status"
-                    aria-live="polite"
-                >
-
-                    🎙️ Click the microphone and speak your request
-
-                </div>
-
-
-
-                <!-- =================================================
-                     QUICK EXAMPLES
-                ================================================== -->
-
-                <div class="quick-section">
-
-                    <span class="try-text">
-                        ✨ Try asking:
-                    </span>
-
-
-                    <button
-                        type="button"
-                        onclick="setExample('fashion')"
-                    >
-                        👗 Party Dress
-                    </button>
-
-
-                    <button
-                        type="button"
-                        onclick="setExample('electronics')"
-                    >
-                        📱 Google Pixel
-                    </button>
-
-
-                    <button
-                        type="button"
-                        onclick="setExample('food')"
-                    >
-                        🍕 Best Pizza
-                    </button>
-
-
-                    <button
-                        type="button"
-                        onclick="setExample('mens')"
-                    >
-                        👟 Men's Shoes
-                    </button>
-
-                </div>
-
-
-
-                <!-- =================================================
-                     SEARCH BUTTON
-                ================================================== -->
-
-                <button
-                    type="button"
-                    class="recommend-button"
-                    onclick="getRecommendations()"
-                >
-
-                    <span class="button-sparkle">
-                        ✦
-                    </span>
-
-                    Find My Best Choices
-
-                    <span class="arrow">
-                        →
-                    </span>
-
-                </button>
-
-
-
-                <!-- =================================================
-                     AI PROCESS STATUS
-                ================================================== -->
-
-                <div class="ai-status">
-
-                    <div class="status-item">
-
-                        <span>
-                            ✓
-                        </span>
-
-                        Understand
-
-                    </div>
-
-
-                    <div class="status-line"></div>
-
-
-                    <div class="status-item">
-
-                        <span>
-                            ✓
-                        </span>
-
-                        Search
-
-                    </div>
-
-
-                    <div class="status-line"></div>
-
-
-                    <div class="status-item">
-
-                        <span>
-                            ✓
-                        </span>
-
-                        Compare
-
-                    </div>
-
-
-                    <div class="status-line"></div>
-
-
-                    <div class="status-item">
-
-                        <span>
-                            ✦
-                        </span>
-
-                        Recommend
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- =================================================
-                 TRUST FEATURES
-            ================================================== -->
-
-            <div class="trust-row">
-
-
-                <div class="trust-item">
-
-                    <span>
-                        ✓
-                    </span>
-
-                    Real-time results
-
-                </div>
-
-
-                <div class="trust-item">
-
-                    <span>
-                        ✓
-                    </span>
-
-                    Smart ranking
-
-                </div>
-
-
-                <div class="trust-item">
-
-                    <span>
-                        ✓
-                    </span>
-
-                    Personalized choices
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-
-    <!-- =====================================================
-         CATEGORIES
-    ====================================================== -->
-
-    <section
-        class="categories-section"
-        id="categories"
-    >
-
-        <div class="section-heading">
-
-            <div class="small-heading">
-                EXPLORE OMNIAI
-            </div>
-
-            <h2>
-
-                One AI.
-
-                <span class="gradient-text">
-                    Endless Choices.
-                </span>
-
-            </h2>
-
-            <p>
-
-                From what to wear to what to buy and where to eat,
-                OmniAI helps you make better decisions.
-
-            </p>
-
-        </div>
-
-
-
-        <div class="category-grid">
-
-
-            <!-- FASHION -->
-
-            <div
-                class="category-card fashion-card"
-                onclick="setExample('fashion')"
-            >
-
-                <div class="card-glow"></div>
-
-                <div class="category-top">
-
-                    <div class="category-icon">
-                        👗
-                    </div>
-
-                    <span class="category-arrow">
-                        →
-                    </span>
-
-                </div>
-
-
-                <h3>
-                    Fashion
-                </h3>
-
-                <p>
-
-                    Discover outfits, shoes and accessories
-                    based on your style, occasion and budget.
-
-                </p>
-
-
-                <div class="category-items">
-
-                    <span>Dresses</span>
-                    <span>Shoes</span>
-                    <span>Heels</span>
-                    <span>Watches</span>
-                    <span>Bags</span>
-                    <span>Jewellery</span>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- ELECTRONICS -->
-
-            <div
-                class="category-card electronics-card"
-                onclick="setExample('electronics')"
-            >
-
-                <div class="card-glow"></div>
-
-                <div class="category-top">
-
-                    <div class="category-icon">
-                        📱
-                    </div>
-
-                    <span class="category-arrow">
-                        →
-                    </span>
-
-                </div>
-
-
-                <h3>
-                    Electronics
-                </h3>
-
-                <p>
-
-                    Find phones, laptops and gadgets by
-                    specifications, price, brand and preferences.
-
-                </p>
-
-
-                <div class="category-items">
-
-                    <span>Phones</span>
-                    <span>Laptops</span>
-                    <span>Headphones</span>
-                    <span>TVs</span>
-                    <span>Cameras</span>
-                    <span>Smartwatches</span>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- FOOD -->
-
-            <div
-                class="category-card food-card"
-                onclick="setExample('food')"
-            >
-
-                <div class="card-glow"></div>
-
-                <div class="category-top">
-
-                    <div class="category-icon">
-                        🍕
-                    </div>
-
-                    <span class="category-arrow">
-                        →
-                    </span>
-
-                </div>
-
-
-                <h3>
-                    Food
-                </h3>
-
-                <p>
-
-                    Discover restaurants and food choices
-                    based on taste, location and preferences.
-
-                </p>
-
-
-                <div class="category-items">
-
-                    <span>Restaurants</span>
-                    <span>Biryani</span>
-                    <span>Pizza</span>
-                    <span>Snacks</span>
-                    <span>Desserts</span>
-                    <span>Groceries</span>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-
-    <!-- =====================================================
-         HOW IT WORKS
-    ====================================================== -->
-
-    <section
-        class="how-section"
-        id="how-it-works"
-    >
-
-        <div class="section-heading">
-
-            <div class="small-heading">
-                HOW IT WORKS
-            </div>
-
-            <h2>
-
-                From your words
-
-                <span class="gradient-text">
-                    to the best choice.
-                </span>
-
-            </h2>
-
-        </div>
-
-
-
-        <div class="steps">
-
-
-            <div class="step">
-
-                <div class="step-number">
-                    01
-                </div>
-
-                <div class="step-icon">
-                    🧠
-                </div>
-
-                <h3>
-                    Understand
-                </h3>
-
-                <p>
-
-                    OmniAI understands your requirements,
-                    preferences, occasion and budget.
-
-                </p>
-
-            </div>
-
-
-
-            <div class="step">
-
-                <div class="step-number">
-                    02
-                </div>
-
-                <div class="step-icon">
-                    🔎
-                </div>
-
-                <h3>
-                    Search
-                </h3>
-
-                <p>
-
-                    The agent searches real-world products,
-                    restaurants and relevant options.
-
-                </p>
-
-            </div>
-
-
-
-            <div class="step">
-
-                <div class="step-number">
-                    03
-                </div>
-
-                <div class="step-icon">
-                    ⚖️
-                </div>
-
-                <h3>
-                    Compare
-                </h3>
-
-                <p>
-
-                    Results are filtered and compared
-                    according to your requirements.
-
-                </p>
-
-            </div>
-
-
-
-            <div class="step">
-
-                <div class="step-number">
-                    04
-                </div>
-
-                <div class="step-icon">
-                    🏆
-                </div>
-
-                <h3>
-                    Recommend
-                </h3>
-
-                <p>
-
-                    OmniAI ranks the best options and
-                    presents your top choices.
-
-                </p>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-
-    <!-- =====================================================
-         RESULTS
-    ====================================================== -->
-
-    <section
-        class="results-section"
-        id="results-section"
-    >
-
-        <div class="results-header">
-
-            <div>
-
-                <div class="small-heading">
-                    OMNIAI RESULTS
-                </div>
-
-                <h2>
-                    Your Top Recommendations
-                </h2>
-
-                <p>
-                    Carefully ranked based on your requirements
-                </p>
-
-            </div>
-
-
-            <div
-                id="result-count"
-                class="result-count"
-            ></div>
-
-        </div>
-
-
-
-        <!-- LOADING -->
-
-        <div
-            id="loading"
-            class="loading"
-        ></div>
-
-
-
-        <!-- RESULTS -->
-
-        <div
-            id="results"
-            class="results-grid"
-        ></div>
-
-    </section>
-
-
-
-    <!-- =====================================================
-         ABOUT
-    ====================================================== -->
-
-    <section
-        class="about-section"
-        id="about"
-    >
-
-        <div class="about-content">
-
-            <div class="small-heading">
-                ABOUT OMNIAI
-            </div>
-
-            <h2>
-
-                Don't search through thousands
-                of choices.
-
-                <span class="gradient-text">
-                    Let AI decide smarter.
-                </span>
-
-            </h2>
-
-
-            <p>
-
-                OmniAI is an intelligent recommendation
-                agent designed to reduce the difficulty of
-                choosing between thousands of available options.
-
-            </p>
-
-
-            <p>
-
-                Simply describe what you need using text or
-                your voice. OmniAI understands your request,
-                searches real results, filters them, compares
-                important factors and ranks the most suitable
-                choices.
-
-            </p>
-
-
-
-            <div class="about-features">
-
-                <div>
-
-                    <span>
-                        ✦
-                    </span>
-
-                    AI Understanding
-
-                </div>
-
-
-                <div>
-
-                    <span>
-                        🌐
-                    </span>
-
-                    Real Results
-
-                </div>
-
-
-                <div>
-
-                    <span>
-                        ⚡
-                    </span>
-
-                    Smart Filtering
-
-                </div>
-
-
-                <div>
-
-                    <span>
-                        🏆
-                    </span>
-
-                    Intelligent Ranking
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-
-    <!-- =====================================================
-         FOOTER
-    ====================================================== -->
-
-    <footer>
-
-        <div class="footer-logo">
-
-            <span>
-                ✦
-            </span>
-
-            OmniAI
-
-        </div>
-
-        <p>
-            Intelligent Recommendation Agent
-        </p>
-
-        <div class="footer-line"></div>
-
-        <p class="copyright">
-            © 2026 OmniAI. Built with AI.
-        </p>
-
-    </footer>
-
-
-
-    <!-- =====================================================
-         JAVASCRIPT
-    ====================================================== -->
-
-    <!--
-        IMPORTANT:
-
-        All JavaScript is handled by script.js.
-
-        This HTML file contains NO inline
-        startVoiceInput() function.
-
-        This prevents duplicate microphone
-        functions from interfering with each other.
-    -->
-
-    <script src="script.js"></script>
-
-
-</body>
-
+<!DOCTYPE html> 
+<html lang="en"> 
+ 
+<head> 
+    <meta charset="UTF-8"> 
+ 
+    <meta name="viewport" 
+          content="width=device-width, initial-scale=1.0"> 
+ 
+    <title>OmniAI - Intelligent Recommendation Agent</title> 
+ 
+    <meta name="description" 
+          content="OmniAI - Intelligent recommendations for fashion, food and electronics."> 
+ 
+    <style> 
+ 
+        /* ========================================================= 
+           RESET 
+        ========================================================= */ 
+ 
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        } 
+ 
+        html { 
+            scroll-behavior: smooth; 
+        } 
+ 
+        body { 
+            font-family: 
+                Inter, 
+                -apple-system, 
+                BlinkMacSystemFont, 
+                "Segoe UI", 
+                Arial, 
+                sans-serif; 
+ 
+            min-height: 100vh; 
+ 
+            background: 
+                linear-gradient( 
+                    135deg, 
+                    #f7f9ff 0%, 
+                    #edf3ff 45%, 
+                    #fff4fa 100% 
+                ); 
+ 
+            color: #172554; 
+        } 
+ 
+        button, 
+        input { 
+            font: inherit; 
+        } 
+ 
+        button { 
+            cursor: pointer; 
+        } 
+ 
+        a { 
+            text-decoration: none; 
+        } 
+ 
+        .hidden { 
+            display: none !important; 
+        } 
+ 
+ 
+        /* ========================================================= 
+           LOGIN 
+        ========================================================= */ 
+ 
+        #loginScreen { 
+            min-height: 100vh; 
+ 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+ 
+            padding: 20px; 
+ 
+            background: 
+                radial-gradient( 
+                    circle at 20% 20%, 
+                    rgba(0, 207, 255, .25), 
+                    transparent 35% 
+                ), 
+                radial-gradient( 
+                    circle at 80% 70%, 
+                    rgba(180, 70, 255, .30), 
+                    transparent 40% 
+                ), 
+                linear-gradient( 
+                    135deg, 
+                    #03132f, 
+                    #061b46 55%, 
+                    #11105b 
+                ); 
+        } 
+ 
+        .login-wrapper { 
+            width: min(1250px, 100%); 
+ 
+            min-height: 620px; 
+ 
+            display: grid; 
+ 
+            grid-template-columns: 
+                1.05fr 
+                .95fr; 
+ 
+            overflow: hidden; 
+ 
+            border-radius: 18px; 
+ 
+            background: white; 
+ 
+            box-shadow: 
+                0 30px 80px 
+                rgba(0, 0, 0, .28); 
+        } 
+ 
+ 
+        /* ========================================================= 
+           LOGIN LEFT 
+        ========================================================= */ 
+ 
+        .login-left { 
+            position: relative; 
+ 
+            overflow: hidden; 
+ 
+            padding: 65px 55px; 
+ 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+ 
+            color: white; 
+ 
+            background: 
+                radial-gradient( 
+                    circle at 70% 10%, 
+                    rgba(0, 210, 255, .55), 
+                    transparent 35% 
+                ), 
+                radial-gradient( 
+                    circle at 90% 80%, 
+                    rgba(174, 52, 255, .60), 
+                    transparent 40% 
+                ), 
+                linear-gradient( 
+                    145deg, 
+                    #04132f, 
+                    #061b42, 
+                    #07134e 
+                ); 
+        } 
+ 
+        .login-left::before { 
+            content: ""; 
+ 
+            position: absolute; 
+ 
+            width: 500px; 
+            height: 220px; 
+ 
+            left: -100px; 
+            bottom: -80px; 
+ 
+            border-radius: 50%; 
+ 
+            border-top: 
+                2px solid 
+                rgba(255, 255, 255, .25); 
+ 
+            transform: rotate(-12deg); 
+        } 
+ 
+        .login-left::after { 
+            content: ""; 
+ 
+            position: absolute; 
+ 
+            width: 600px; 
+            height: 200px; 
+ 
+            left: -120px; 
+            bottom: -120px; 
+ 
+            border-radius: 50%; 
+ 
+            border-top: 
+                2px solid 
+                rgba(255, 80, 180, .35); 
+ 
+            transform: rotate(-12deg); 
+        } 
+ 
+        .login-brand { 
+            position: relative; 
+            z-index: 2; 
+ 
+            display: flex; 
+            align-items: center; 
+ 
+            gap: 12px; 
+ 
+            font-size: 30px; 
+ 
+            font-weight: 900; 
+ 
+            margin-bottom: 35px; 
+        } 
+ 
+        .login-brand-icon { 
+            width: 54px; 
+            height: 54px; 
+ 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+ 
+            font-size: 30px; 
+ 
+            border-radius: 15px; 
+ 
+            background: 
+                linear-gradient( 
+                    135deg, 
+                    #ff3cac, 
+                    #7d5cff, 
+                    #00d9ff 
+                ); 
+ 
+            box-shadow: 
+                0 0 35px 
+                rgba(107, 90, 255, .65); 
+        } 
+ 
+        .login-left h1 { 
+            position: relative; 
+            z-index: 2; 
+ 
+            max-width: 500px; 
+ 
+            font-size: 
+                clamp(38px, 5vw, 62px); 
+ 
+            line-height: 1.05; 
+ 
+            margin-bottom: 22px; 
+        } 
+ 
+        .login-left h1 span { 
+            background: 
+                linear-gradient( 
+                    90deg, 
+                    #ffffff, 
+                    #9eeeff, 
+                    #ff8ed3 
+                ); 
+ 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+        } 
+ 
+        .login-left p { 
+            position: relative; 
+            z-index: 2; 
+ 
+            max-width: 430px; 
+ 
+            font-size: 18px; 
+ 
+            line-height: 1.65; 
+ 
+            color: rgba(255,255,255,.78); 
+        } 
+ 
+        .login-features { 
+            position: relative; 
+            z-index: 2; 
+ 
+            display: flex; 
+ 
+            gap: 15px; 
+ 
+            margin-top: 45px; 
+ 
+            flex-wrap: wrap; 
+        } 
+ 
+        .login-feature { 
+            width: 95px; 
+ 
+            min-height: 105px; 
+ 
+            padding: 15px 10px; 
+ 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+ 
+            text-align: center; 
+ 
+            border-radius: 18px; 
+ 
+            background: 
+                rgba(255,255,255,.12); 
+ 
+            border: 
+                1px solid 
+                rgba(255,255,255,.18); 
+ 
+            backdrop-filter: blur(10px); 
+        } 
+ 
+        .login-feature-icon { 
+            font-size: 27px; 
+ 
+            margin-bottom: 7px; 
+        } 
+ 
+        .login-feature strong { 
+            font-size: 13px; 
+        } 
+ 
+        .login-feature small { 
+            margin-top: 3px; 
+ 
+            font-size: 10px; 
+ 
+            color: 
+                rgba(255,255,255,.65); 
+        } 
+ 
+        .login-tagline { 
+            position: relative; 
+            z-index: 2; 
+ 
+            margin-top: 45px; 
+ 
+            font-size: 18px; 
+ 
+            font-style: italic; 
+ 
+            color: #ffb8e0; 
+        } 
+ 
+ 
+        /* ========================================================= 
+           LOGIN RIGHT 
+        ========================================================= */ 
+ 
+        .login-right { 
+            padding: 45px; 
+ 
+            display: flex; 
+ 
+            align-items: center; 
+ 
+            justify-content: center; 
+ 
+            background: 
+                linear-gradient( 
+                    135deg, 
+                    #ffffff, 
+                    #f8fbff 
+                ); 
+        } 
+ 
+        .login-form { 
+            width: 100%; 
+ 
+            max-width: 430px; 
+        } 
+ 
+        .login-form h2 { 
+            font-size: 30px; 
+ 
+            color: #15244c; 
+ 
+            margin-bottom: 8px; 
+        } 
+ 
+        .login-form-subtitle { 
+            color: #6c7895; 
+ 
+            font-size: 14px; 
+ 
+            margin-bottom: 28px; 
+        } 
+ 
+        .login-input-wrapper { 
+            position: relative; 
+        } 
+ 
+        .login-input-icon { 
+            position: absolute; 
+ 
+            left: 17px; 
+            top: 50%; 
+ 
+            transform: 
+                translateY(-50%); 
+ 
+            font-size: 17px; 
+        } 
+ 
+        #loginInput { 
+            width: 100%; 
+ 
+            height: 52px; 
+ 
+            padding: 
+                0 16px 0 48px; 
+ 
+            border: 
+                1px solid 
+                #dce4f2; 
+ 
+            border-radius: 12px; 
+ 
+            outline: none; 
+ 
+            background: white; 
+ 
+            color: #172554; 
+ 
+            transition: .2s; 
+        } 
+ 
+        #loginInput:focus { 
+            border-color: #635bff; 
+ 
+            box-shadow: 
+                0 0 0 4px 
+                rgba(99,91,255,.10); 
+        } 
+ 
+        #continueBtn { 
+            width: 100%; 
+ 
+            height: 52px; 
+ 
+            margin-top: 14px; 
+ 
+            border: none; 
+ 
+            border-radius: 12px; 
+ 
+            color: white; 
+ 
+            font-weight: 800; 
+ 
+            background: 
+                linear-gradient( 
+                    90deg, 
+                    #1688ff, 
+                    #7b3ff2, 
+                    #a83cff 
+                ); 
+ 
+            box-shadow: 
+                0 10px 25px 
+                rgba(92,80,240,.25); 
+ 
+            transition: .2s; 
+        } 
+ 
+        #continueBtn:hover { 
+            transform: 
+                translateY(-2px); 
+ 
+            box-shadow: 
+                0 14px 30px 
+                rgba(92,80,240,.35); 
+        } 
+ 
+        .terms { 
+            text-align: center; 
+ 
+            color: #8993a9; 
+ 
+            font-size: 10px; 
+ 
+            margin-top: 12px; 
+ 
+            line-height: 1.5; 
+        } 
+ 
+        .login-divider { 
+            display: flex; 
+ 
+            align-items: center; 
+ 
+            gap: 12px; 
+ 
+            margin: 25px 0; 
+ 
+            color: #9aa3b6; 
+ 
+            font-size: 12px; 
+        } 
+ 
+        .login-divider::before, 
+        .login-divider::after { 
+            content: ""; 
+ 
+            flex: 1; 
+ 
+            height: 1px; 
+ 
+            background: #e3e8f1; 
+        } 
+ 
+        .social-buttons { 
+            display: grid; 
+ 
+            grid-template-columns: 
+                1fr 1fr; 
+ 
+            gap: 12px; 
+        } 
+ 
+        .social-buttons button { 
+            height: 48px; 
+ 
+            border: 
+                1px solid 
+                #dfe5ef; 
+ 
+            border-radius: 11px; 
+ 
+            background: white; 
+ 
+            color: #26345b; 
+ 
+            font-weight: 700; 
+ 
+            transition: .2s; 
+        } 
+ 
+        .social-buttons button:hover { 
+            background: #f6f8fc; 
+ 
+            transform: 
+                translateY(-1px); 
+        } 
+ 
+        .login-footer { 
+            text-align: center; 
+ 
+            margin-top: 30px; 
+ 
+            font-size: 12px; 
+ 
+            color: #77839a; 
+        } 
+ 
+        .login-footer strong { 
+            color: #635bff; 
+        } 
+ 
+ 
+        /* ========================================================= 
+           APP TOPBAR 
+        ========================================================= */ 
+ 
+        #appScreen { 
+            min-height: 100vh; 
+        } 
+ 
+        .topbar { 
+            height: 64px; 
+ 
+            display: flex; 
+ 
+            align-items: center; 
+ 
+            justify-content: space-between; 
+ 
+            padding: 0 25px; 
+ 
+            background: 
+                rgba(255,255,255,.92); 
+ 
+            border-bottom: 
+                1px solid 
+                #e5ebf5; 
+ 
+            position: sticky; 
+ 
+            top: 0; 
+ 
+            z-index: 100; 
+ 
+            backdrop-filter: blur(15px); 
+        } 
+ 
+        .brand { 
+            display: flex; 
+ 
+            align-items: center; 
+ 
+            gap: 9px; 
+ 
+            font-size: 20px; 
+ 
+            font-weight: 900; 
+ 
+            color: #172554; 
+        } 
+ 
+        .brand-icon { 
+            width: 34px; 
+            height: 34px; 
+ 
+            display: flex; 
+ 
+            align-items: center; 
+            justify-content: center; 
+ 
+            border-radius: 10px; 
+ 
+            font-size: 19px; 
+ 
+            background: 
+                linear-gradient( 
+                    135deg, 
+                    #00bfff, 
+                    #7255ff, 
+                    #ff4fa3 
+                ); 
+ 
+            color: white; 
+        } 
+ 
+        .user-area { 
+            display: flex; 
+ 
+            align-items: center; 
+ 
+            gap: 13px; 
+        } 
+ 
+        .user-avatar { 
+            width: 32px; 
+            height: 32px; 
+ 
+            border-radius: 50%; 
+ 
+            display: flex; 
+ 
+            align-items: center; 
+            justify-content: center; 
+ 
+            color: white; 
+ 
+            background: 
+                linear-gradient( 
+                    135deg, 
+                    #141b42, 
+                    #6b39d8 
+                ); 
+ 
+            font-size: 12px; 
+ 
+            font-weight: 800; 
+        } 
+ 
+        #welcomeName { 
+            font-weight: 800; 
+        } 
+ 
+        #profileName { 
+            font-size: 12px; 
+ 
+            font-weight: 700; 
+        } 
+ 
+        #logoutBtn { 
+            border: none; 
+ 
+            background: #f2f4f8; 
+ 
+            color: #59657d; 
+ 
+            padding: 8px 13px; 
+ 
+            border-radius: 9px; 
+ 
+            font-size: 12px; 
+ 
+            font-weight: 700; 
+        } 
+ 
+ 
+        /* ========================================================= 
+           LAYOUT 
+        ========================================================= */ 
+ 
+        .app-layout { 
+            display: flex; 
+ 
+            min-height: 
+                calc(100vh - 64px); 
+        } 
+ 
+        .sidebar { 
+            width: 190px; 
+ 
+            flex-shrink: 0; 
+ 
+            background: 
+                rgba(255,255,255,.9); 
+ 
+            border-right: 
+                1px solid 
+                #e6ebf4; 
+ 
+            padding: 22px 12px; 
+        } 
+ 
+        .sidebar button { 
+            width: 100%; 
+ 
+            height: 43px; 
+ 
+            display: flex; 
+ 
+            align-items: center; 
+ 
+            gap: 11px; 
+ 
+            padding: 0 14px; 
+ 
+            margin-bottom: 7px; 
+ 
+            border: none; 
+ 
+            border-radius: 10px; 
+ 
+            background: transparent; 
+ 
+            color: #596780; 
+ 
+            text-align: left; 
+ 
+            font-size: 13px; 
+ 
+            font-weight: 700; 
+ 
+            transition: .2s; 
+        } 
+ 
+        .sidebar button:hover, 
+        .sidebar button.active { 
+            background: 
+                linear-gradient( 
+                    90deg, 
+                    #edf5ff, 
+                    #f2efff 
+                ); 
+ 
+            color: #4437d4; 
+        } 
+ 
+        #mobileMenuBtn { 
+            display: none; 
+        } 
+ 
+        .main-content { 
+            flex: 1; 
+ 
+            min-width: 0; 
+ 
+            padding: 30px; 
+ 
+            overflow: hidden; 
+        } 
+ 
+ 
+        /* ========================================================= 
+           HOME 
+        ========================================================= */ 
+ 
+        .page { 
+            width: 100%; 
+        } 
+ 
+        .hero { 
+            max-width: 1100px; 
+ 
+            margin: 0 auto; 
+ 
+            padding: 20px 10px 15px; 
+        } 
+ 
+        .hero-top { 
+            display: flex; 
+ 
+            align-items: center; 
+ 
+            justify-content: space-between; 
+ 
+            gap: 20px; 
+        } 
+ 
+        .hero h2 { 
+            font-size: 
+                clamp(28px, 4vw, 43px); 
+ 
+            line-height: 1.15; 
+ 
+            color: #172554; 
+ 
+            margin-bottom: 8px; 
+        } 
+ 
+        .hero p { 
+            color: #73809a; 
+ 
+            font-size: 14px; 
+ 
+            line-height: 1.6; 
+        } 
+ 
+        .gradient-text { 
+            background: 
+                linear-gradient( 
+                    90deg, 
+                    #635bff, 
+                    #ff4fa3, 
+                    #ff8a4c 
+                ); 
+ 
+            -webkit-background-clip: text; 
+ 
+            -webkit-text-fill-color: 
+                transparent; 
+        } 
+ 
+        .hero-badge { 
+            display: inline-flex; 
+ 
+            align-items: center; 
+ 
+            gap: 6px; 
+ 
+            margin-bottom: 10px; 
+ 
+            padding: 7px 12px; 
+ 
+            border-radius: 50px; 
+ 
+            background: #f0efff; 
+ 
+            color: #594fe0; 
+ 
+            font-size: 10px; 
+ 
+            font-weight: 900; 
+ 
+            letter-spacing: .5px; 
+        } 
+ 
+ 
+        /* ========================================================= 
+           CATEGORY CARDS 
+        ========================================================= */ 
+ 
+        .category-grid { 
+            max-width: 1100px; 
+ 
+            margin: 15px auto 20px; 
+ 
+            display: grid; 
+ 
+            grid-template-columns: 
+                repeat(3, 1fr); 
+ 
+            gap: 14px; 
+        } 
+ 
+        .category-card { 
+            min-height: 135px; 
+ 
+            position: relative; 
+ 
+            overflow: hidden; 
+ 
+            padding: 22px; 
+ 
+            border-radius: 17px; 
+ 
+            border: 1px solid 
+                rgba(255,255,255,.8); 
+ 
+            box-shadow: 
+                0 10px 30px 
+                rgba(30,55,120,.10); 
+ 
+            transition: .25s; 
+ 
+            cursor: pointer; 
+        } 
+ 
+        .category-card:hover { 
+            transform: 
+                translateY(-4px); 
+ 
+            box-shadow: 
+                0 18px 35px 
+                rgba(30,55,120,.16); 
+        } 
+ 
+        .category-card::after { 
+            content: ""; 
+ 
+            position: absolute; 
+ 
+            width: 130px; 
+            height: 130px; 
+ 
+            right: -25px; 
+            bottom: -45px; 
+ 
+            border-radius: 50%; 
+ 
+            background: 
+                rgba(255,255,255,.25); 
+        } 
+ 
+        .fashion-card { 
+            background: 
+                linear-gradient( 
+                    135deg, 
+                    #ffd9eb, 
+                    #fff1f8 
+                ); 
+        } 
+ 
+        .food-card { 
+            background: 
+                linear-gradient( 
+                    135deg, 
+                    #fff0c9, 
+                    #fff7e8 
+                ); 
+        } 
+ 
+        .electronics-card { 
+            background: 
+                linear-gradient( 
+                    135deg, 
+                    #d8e6ff, 
+                    #eef4ff 
+                ); 
+        } 
+ 
+        .category-icon { 
+            font-size: 35px; 
+ 
+            margin-bottom: 10px; 
+        } 
+ 
+        .category-card h3 { 
+            font-size: 17px; 
+ 
+            color: #1d2a55; 
+ 
+            margin-bottom: 4px; 
+        } 
+ 
+        .category-card p { 
+            color: #64708a; 
+ 
+            font-size: 11px; 
+        } 
+ 
+        .category-arrow { 
+            position: absolute; 
+ 
+            right: 15px; 
+            bottom: 15px; 
+ 
+            width: 27px; 
+            height: 27px; 
+ 
+            display: flex; 
+ 
+            align-items: center; 
+ 
+            justify-content: center; 
+ 
+            border-radius: 50%; 
+ 
+            background: white; 
+ 
+            box-shadow: 
+                0 4px 10px 
+                rgba(0,0,0,.08); 
+        } 
+ 
+ 
+        /* ========================================================= 
+           SEARCH 
+        ========================================================= */ 
+ 
+        .search-panel { 
+            max-width: 1100px; 
+ 
+            margin: 0 auto; 
+ 
+            padding: 8px; 
+ 
+            background: 
+                rgba(255,255,255,.85); 
+ 
+            border: 
+                1px solid 
+                #e0e7f3; 
+ 
+            border-radius: 17px; 
+ 
+            box-shadow: 
+                0 10px 30px 
+                rgba(30,55,120,.08); 
+        } 
+ 
+        .search-box { 
+            display: flex; 
+ 
+            align-items: center; 
+ 
+            gap: 7px; 
+        } 
+ 
+        #userRequest { 
+            flex: 1; 
+ 
+            min-width: 0; 
+ 
+            height: 48px; 
+ 
+            padding: 0 15px; 
+ 
+            border: none; 
+ 
+            outline: none; 
+ 
+            background: transparent; 
+ 
+            color: #172554; 
+ 
+            font-size: 13px; 
+        } 
+ 
+        #userRequest::placeholder { 
+            color: #98a3b8; 
+        } 
+ 
+        #micButton { 
+            width: 43px; 
+            height: 43px; 
+ 
+            flex-shrink: 0; 
+ 
+            border: none; 
+ 
+            border-radius: 12px; 
+ 
+            background: #f0efff; 
+ 
+            color: #5546d8; 
+ 
+            font-size: 17px; 
+        } 
+ 
+        #micButton:hover { 
+            background: #e4e1ff; 
+        } 
+ 
+        #micButton.listening { 
+            background: #ffe1eb; 
+ 
+            color: #ff397c; 
+ 
+            animation: 
+                pulseMic 1s infinite; 
+        } 
+ 
+        @keyframes pulseMic { 
+            50% { 
+                transform: scale(1.08); 
+            } 
+        } 
+ 
+        #searchButton { 
+            height: 43px; 
+ 
+            padding: 0 20px; 
+ 
+            flex-shrink: 0; 
+ 
+            border: none; 
+ 
+            border-radius: 12px; 
+ 
+            color: white; 
+ 
+            background: 
+                linear-gradient( 
+                    90deg, 
+                    #355cff, 
+                    #6539ee 
+                ); 
+ 
+            font-size: 12px; 
+ 
+            font-weight: 800; 
+ 
+            box-shadow: 
+                0 7px 18px 
+                rgba(70,75,230,.25); 
+        } 
+ 
+        #searchButton:hover { 
+            transform: 
+                translateY(-1px); 
+        } 
+ 
+ 
+        /* ========================================================= 
+           POPULAR SEARCHES 
+        ========================================================= */ 
+ 
+        .popular-searches { 
+            max-width: 1100px; 
+ 
+            margin: 18px auto; 
+        } 
+ 
+        .popular-searches h3 { 
+            font-size: 14px; 
+ 
+            margin-bottom: 10px; 
+ 
+            color: #1b2a57; 
+        } 
+ 
+        .popular-list { 
+            display: flex; 
+ 
+            gap: 8px; 
+ 
+            flex-wrap: wrap; 
+        } 
+ 
+        .popular-chip { 
+            padding: 8px 12px; 
+ 
+            border: 1px solid 
+                #e1e6f1; 
+ 
+            border-radius: 50px; 
+ 
+            background: white; 
+ 
+            color: #62708c; 
+ 
+            font-size: 10px; 
+ 
+            font-weight: 700; 
+ 
+            cursor: pointer; 
+ 
+            transition: .2s; 
+        } 
+ 
+        .popular-chip:hover { 
+            background: #f1efff; 
+ 
+            color: #5145d4; 
+        } 
+ 
+ 
+        /* ========================================================= 
+           BUDGET 
+        ========================================================= */ 
+ 
+        .budget-area { 
+            display: flex; 
+ 
+            gap: 8px; 
+ 
+            padding: 8px 5px 4px; 
+        } 
+ 
+        .budget-area input { 
+            width: 150px; 
+ 
+            height: 36px; 
+ 
+            padding: 0 10px; 
+ 
+            border: 
+                1px solid 
+                #e2e7f1; 
+ 
+            border-radius: 8px; 
+ 
+            outline: none; 
+ 
+            font-size: 11px; 
+        } 
+ 
+        #applyBudgetBtn { 
+            height: 36px; 
+ 
+            padding: 0 14px; 
+ 
+            border: none; 
+ 
+            border-radius: 8px; 
+ 
+            background: #172554; 
+ 
+            color: white; 
+ 
+            font-size: 11px; 
+ 
+            font-weight: 700; 
+        } 
+ 
+ 
+        /* ========================================================= 
+           LOADING 
+        ========================================================= */ 
+ 
+        #loading { 
+            max-width: 900px; 
+ 
+            margin: 25px auto; 
+ 
+            padding: 25px; 
+ 
+            text-align: center; 
+ 
+            border-radius: 18px; 
+ 
+            background: white; 
+ 
+            box-shadow: 
+                0 10px 30px 
+                rgba(30,50,100,.08); 
+ 
+            color: #6254df; 
+ 
+            font-size: 13px; 
+ 
+            font-weight: 800; 
+        } 
+ 
+        .spinner { 
+            width: 32px; 
+            height: 32px; 
+ 
+            margin: 0 auto 12px; 
+ 
+            border: 
+                4px solid 
+                #e6e8f2; 
+ 
+            border-top-color: 
+                #635bff; 
+ 
+            border-radius: 50%; 
+ 
+            animation: 
+                spin .8s linear infinite; 
+        } 
+ 
+        @keyframes spin { 
+            to { 
+                transform: 
+                    rotate(360deg); 
+            } 
+        } 
+ 
+ 
+        /* ========================================================= 
+           EXAMPLES 
+        ========================================================= */ 
+ 
+        .examples { 
+            max-width: 1100px; 
+ 
+            margin: 15px auto; 
+ 
+            display: flex; 
+ 
+            flex-wrap: wrap; 
+ 
+            gap: 7px; 
+        } 
+ 
+        .example-btn { 
+            border: 
+                1px solid 
+                #e0e5f0; 
+ 
+            background: white; 
+ 
+            color: #596783; 
+ 
+            padding: 8px 12px; 
+ 
+            border-radius: 50px; 
+ 
+            font-size: 10px; 
+ 
+            font-weight: 700; 
+ 
+            transition: .2s; 
+        } 
+ 
+        .example-btn:hover { 
+            background: #f0efff; 
+ 
+            color: #5347d8; 
+        } 
+ 
+ 
+        /* ========================================================= 
+           RESULTS 
+        ========================================================= */ 
+ 
+        #results-section { 
+            max-width: 1100px; 
+ 
+            margin: 30px auto; 
+        } 
+ 
+        .results-header { 
+            display: flex; 
+ 
+            justify-content: space-between; 
+ 
+            align-items: center; 
+ 
+            margin-bottom: 18px; 
+        } 
+ 
+        .results-title { 
+            font-size: 21px; 
+ 
+            color: #172554; 
+        } 
+ 
+        #resultsContainer { 
+            display: grid; 
+ 
+            grid-template-columns: 
+                repeat( 
+                    4, 
+                    minmax(0, 1fr) 
+                ); 
+ 
+            gap: 14px; 
+        } 
+ 
+ 
+        /* ========================================================= 
+           PRODUCT CARD 
+        ========================================================= */ 
+ 
+        .product-card { 
+            overflow: hidden; 
+ 
+            background: white; 
+ 
+            border-radius: 14px; 
+ 
+            border: 
+                1px solid 
+                #e4e8f1; 
+ 
+            box-shadow: 
+                0 8px 24px 
+                rgba(30,50,110,.09); 
+ 
+            transition: .25s; 
+        } 
+ 
+        .product-card:hover { 
+            transform: 
+                translateY(-4px); 
+ 
+            box-shadow: 
+                0 15px 30px 
+                rgba(30,50,110,.14); 
+        } 
+ 
+        .product-image-wrapper { 
+            height: 190px; 
+ 
+            position: relative; 
+ 
+            overflow: hidden; 
+ 
+            display: flex; 
+ 
+            align-items: center; 
+ 
+            justify-content: center; 
+ 
+            background: #f5f6fa; 
+        } 
+ 
+        .product-image { 
+            width: 100%; 
+            height: 100%; 
+ 
+            object-fit: cover; 
+        } 
+ 
+        .product-placeholder { 
+            font-size: 45px; 
+        } 
+ 
+        .recommendation-number { 
+            position: absolute; 
+ 
+            left: 9px; 
+            top: 9px; 
+ 
+            padding: 5px 8px; 
+ 
+            border-radius: 7px; 
+ 
+            color: white; 
+ 
+            background: 
+                linear-gradient( 
+                    90deg, 
+                    #ff3b83, 
+                    #9d39f2 
+                ); 
+ 
+            font-size: 9px; 
+ 
+            font-weight: 900; 
+        } 
+ 
+        .save-product-btn { 
+            position: absolute; 
+ 
+            right: 9px; 
+            top: 9px; 
+ 
+            width: 28px; 
+            height: 28px; 
+ 
+            display: flex; 
+ 
+            align-items: center; 
+            justify-content: center; 
+ 
+            border: none; 
+ 
+            border-radius: 50%; 
+ 
+            background: white; 
+ 
+            color: #7a8499; 
+ 
+            font-size: 15px; 
+ 
+            box-shadow: 
+                0 4px 10px 
+                rgba(0,0,0,.08); 
+        } 
+ 
+        .save-product-btn.saved { 
+            color: #ff3d85; 
+        } 
+ 
+        .product-content { 
+            padding: 12px; 
+        } 
+ 
+        .product-category { 
+            color: #695be3; 
+ 
+            font-size: 9px; 
+ 
+            font-weight: 900; 
+ 
+            text-transform: uppercase; 
+ 
+            margin-bottom: 5px; 
+        } 
+ 
+        .product-title { 
+            color: #243257; 
+ 
+            font-size: 12px; 
+ 
+            font-weight: 800; 
+ 
+            line-height: 1.35; 
+ 
+            min-height: 32px; 
+ 
+            margin-bottom: 6px; 
+        } 
+ 
+        .product-description { 
+            color: #7c879c; 
+ 
+            font-size: 10px; 
+ 
+            line-height: 1.4; 
+ 
+            margin-bottom: 7px; 
+        } 
+ 
+        .product-price { 
+            color: #18285a; 
+ 
+            font-size: 15px; 
+ 
+            font-weight: 900; 
+ 
+            margin-bottom: 5px; 
+        } 
+ 
+        .product-source, 
+        .product-rating { 
+            color: #758198; 
+ 
+            font-size: 9px; 
+ 
+            margin-top: 3px; 
+        } 
+ 
+        .view-product-btn { 
+            display: block; 
+ 
+            width: 100%; 
+ 
+            margin-top: 10px; 
+ 
+            padding: 9px; 
+ 
+            border-radius: 8px; 
+ 
+            text-align: center; 
+ 
+            background: 
+                linear-gradient( 
+                    90deg, 
+                    #315cff, 
+                    #5d39ef 
+                ); 
+ 
+            color: white; 
+ 
+            font-size: 10px; 
+ 
+            font-weight: 800; 
+        } 
+ 
+ 
+        /* ========================================================= 
+           EMPTY / ERROR 
+        ========================================================= */ 
+ 
+        .omniai-empty-state, 
+        .omniai-error-state, 
+        .omniai-loading-message { 
+            grid-column: 1 / -1; 
+ 
+            padding: 45px 20px; 
+ 
+            text-align: center; 
+ 
+            border-radius: 18px; 
+ 
+            background: white; 
+ 
+            border: 
+                1px solid 
+                #e5e9f1; 
+        } 
+ 
+        .omniai-empty-state p, 
+        .omniai-error-state p, 
+        .omniai-loading-message p { 
+            margin-top: 10px; 
+ 
+            color: #778299; 
+ 
+            font-size: 13px; 
+        } 
+ 
+        .omniai-error-state button { 
+            margin-top: 15px; 
+ 
+            padding: 10px 17px; 
+ 
+            border: none; 
+ 
+            border-radius: 8px; 
+ 
+            color: white; 
+ 
+            background: #635bff; 
+        } 
+ 
+ 
+        /* ========================================================= 
+           OTHER PAGES 
+        ========================================================= */ 
+ 
+        .page-card { 
+            max-width: 1000px; 
+ 
+            margin: 20px auto; 
+ 
+            padding: 30px; 
+ 
+            border-radius: 18px; 
+ 
+            background: white; 
+ 
+            border: 
+                1px solid 
+                #e4e8f1; 
+ 
+            box-shadow: 
+                0 10px 30px 
+                rgba(30,50,110,.08); 
+        } 
+ 
+        .page-card h2 { 
+            color: #172554; 
+ 
+            margin-bottom: 10px; 
+        } 
+ 
+        .page-card p { 
+            color: #758198; 
+ 
+            line-height: 1.6; 
+        } 
+ 
+        .page-card button { 
+            padding: 10px 16px; 
+ 
+            border: none; 
+ 
+            border-radius: 9px; 
+ 
+            background: 
+                linear-gradient( 
+                    90deg, 
+                    #635bff, 
+                    #8c3df4 
+                ); 
+ 
+            color: white; 
+ 
+            font-weight: 700; 
+        } 
+ 
+ 
+        /* ========================================================= 
+           MOBILE HEADER 
+        ========================================================= */ 
+ 
+        .mobile-header-button { 
+            display: none; 
+ 
+            width: 35px; 
+            height: 35px; 
+ 
+            border: none; 
+ 
+            border-radius: 9px; 
+ 
+            background: #f0f2f8; 
+        } 
+ 
+ 
+        /* ========================================================= 
+           MOBILE 
+        ========================================================= */ 
+ 
+        @media (max-width: 900px) { 
+ 
+            .login-wrapper { 
+                grid-template-columns: 1fr; 
+            } 
+ 
+            .login-left { 
+                min-height: 350px; 
+ 
+                padding: 40px; 
+            } 
+ 
+            .login-left h1 { 
+                font-size: 42px; 
+            } 
+ 
+            .login-features { 
+                margin-top: 25px; 
+            } 
+ 
+            .login-right { 
+                padding: 35px 25px; 
+            } 
+ 
+            .category-grid { 
+                grid-template-columns: 
+                    repeat(3, 1fr); 
+            } 
+ 
+            #resultsContainer { 
+                grid-template-columns: 
+                    repeat(2, 1fr); 
+            } 
+ 
+            .sidebar { 
+                width: 175px; 
+            } 
+ 
+        } 
+ 
+ 
+        /* ========================================================= 
+           PHONE 
+        ========================================================= */ 
+ 
+        @media (max-width: 650px) { 
+ 
+            body { 
+                background: 
+                    linear-gradient( 
+                        180deg, 
+                        #f7f9ff, 
+                        #edf3ff 
+                    ); 
+            } 
+ 
+            /* LOGIN */ 
+ 
+            #loginScreen { 
+                padding: 0; 
+ 
+                align-items: stretch; 
+            } 
+ 
+            .login-wrapper { 
+                min-height: 100vh; 
+ 
+                border-radius: 0; 
+ 
+                box-shadow: none; 
+            } 
+ 
+            .login-left { 
+                min-height: 330px; 
+ 
+                padding: 35px 25px; 
+ 
+                justify-content: center; 
+            } 
+ 
+            .login-brand { 
+                font-size: 25px; 
+ 
+                margin-bottom: 25px; 
+            } 
+ 
+            .login-brand-icon { 
+                width: 45px; 
+                height: 45px; 
+ 
+                font-size: 25px; 
+            } 
+ 
+            .login-left h1 { 
+                font-size: 36px; 
+ 
+                margin-bottom: 15px; 
+            } 
+ 
+            .login-left p { 
+                font-size: 14px; 
+            } 
+ 
+            .login-features { 
+                gap: 8px; 
+ 
+                margin-top: 25px; 
+            } 
+ 
+            .login-feature { 
+                width: 75px; 
+ 
+                min-height: 80px; 
+ 
+                padding: 8px; 
+            } 
+ 
+            .login-feature-icon { 
+                font-size: 21px; 
+            } 
+ 
+            .login-feature strong { 
+                font-size: 10px; 
+            } 
+ 
+            .login-feature small { 
+                font-size: 8px; 
+            } 
+ 
+            .login-tagline { 
+                display: none; 
+            } 
+ 
+            .login-right { 
+                padding: 28px 22px; 
+ 
+                align-items: flex-start; 
+            } 
+ 
+            .login-form h2 { 
+                font-size: 25px; 
+            } 
+ 
+ 
+            /* TOPBAR */ 
+ 
+            .topbar { 
+                height: 58px; 
+ 
+                padding: 0 12px; 
+            } 
+ 
+            .brand { 
+                font-size: 18px; 
+            } 
+ 
+            .brand-icon { 
+                width: 31px; 
+                height: 31px; 
+            } 
+ 
+            .user-area > span:not(.user-avatar) { 
+                display: none; 
+            } 
+ 
+            #profileName { 
+                display: none; 
+            } 
+ 
+            #logoutBtn { 
+                display: none; 
+            } 
+ 
+            .mobile-header-button { 
+                display: block; 
+            } 
+ 
+ 
+            /* LAYOUT */ 
+ 
+            .app-layout { 
+                min-height: 
+                    calc(100vh - 58px); 
+            } 
+ 
+            .sidebar { 
+                position: fixed; 
+ 
+                top: 58px; 
+ 
+                left: -220px; 
+ 
+                bottom: 0; 
+ 
+                width: 205px; 
+ 
+                z-index: 300; 
+ 
+                box-shadow: 
+                    10px 0 30px 
+                    rgba(30,50,110,.12); 
+ 
+                transition: 
+                    left .25s ease; 
+            } 
+ 
+            body.sidebar-open .sidebar { 
+                left: 0; 
+            } 
+ 
+            #mobileMenuBtn { 
+                display: flex; 
+            } 
+ 
+            .main-content { 
+                width: 100%; 
+ 
+                padding: 15px 12px 85px; 
+            } 
+ 
+ 
+            /* HERO */ 
+ 
+            .hero { 
+                padding: 12px 4px; 
+            } 
+ 
+            .hero-badge { 
+                font-size: 8px; 
+ 
+                padding: 6px 9px; 
+            } 
+ 
+            .hero h2 { 
+                font-size: 28px; 
+            } 
+ 
+            .hero p { 
+                font-size: 12px; 
+            } 
+ 
+ 
+            /* CATEGORIES */ 
+ 
+            .category-grid { 
+                gap: 8px; 
+ 
+                margin-top: 10px; 
+            } 
+ 
+            .category-card { 
+                min-height: 115px; 
+ 
+                padding: 12px; 
+ 
+                border-radius: 14px; 
+            } 
+ 
+            .category-icon { 
+                font-size: 27px; 
+            } 
+ 
+            .category-card h3 { 
+                font-size: 12px; 
+            } 
+ 
+            .category-card p { 
+                font-size: 8px; 
+            } 
+ 
+            .category-arrow { 
+                width: 22px; 
+                height: 22px; 
+ 
+                right: 8px; 
+                bottom: 8px; 
+ 
+                font-size: 10px; 
+            } 
+ 
+ 
+            /* SEARCH */ 
+ 
+            .search-panel { 
+                padding: 7px; 
+ 
+                border-radius: 14px; 
+            } 
+ 
+            .search-box { 
+                gap: 5px; 
+            } 
+ 
+            #userRequest { 
+                height: 44px; 
+ 
+                font-size: 11px; 
+ 
+                padding-left: 10px; 
+            } 
+ 
+            #micButton { 
+                width: 40px; 
+                height: 40px; 
+ 
+                font-size: 15px; 
+            } 
+ 
+            #searchButton { 
+                width: 43px; 
+ 
+                padding: 0; 
+ 
+                font-size: 0; 
+            } 
+ 
+            #searchButton::after { 
+                content: "➤"; 
+ 
+                font-size: 16px; 
+            } 
+ 
+            .budget-area { 
+                display: grid; 
+ 
+                grid-template-columns: 
+                    1fr 1fr; 
+ 
+                gap: 6px; 
+            } 
+ 
+            .budget-area input { 
+                width: 100%; 
+ 
+                height: 34px; 
+            } 
+ 
+            #applyBudgetBtn { 
+                grid-column: 1 / -1; 
+ 
+                width: 100%; 
+ 
+                height: 34px; 
+            } 
+ 
+ 
+            /* POPULAR */ 
+ 
+            .popular-searches h3 { 
+                font-size: 12px; 
+            } 
+ 
+            .popular-list { 
+                overflow-x: auto; 
+ 
+                flex-wrap: nowrap; 
+ 
+                padding-bottom: 5px; 
+            } 
+ 
+            .popular-chip { 
+                white-space: nowrap; 
+ 
+                font-size: 9px; 
+            } 
+ 
+ 
+            /* RESULTS */ 
+ 
+            #results-section { 
+                margin-top: 22px; 
+            } 
+ 
+            .results-title { 
+                font-size: 18px; 
+            } 
+ 
+            #resultsContainer { 
+                grid-template-columns: 
+                    repeat(2, minmax(0, 1fr)); 
+ 
+                gap: 9px; 
+            } 
+ 
+            .product-image-wrapper { 
+                height: 150px; 
+            } 
+ 
+            .product-content { 
+                padding: 9px; 
+            } 
+ 
+            .product-title { 
+                font-size: 10px; 
+            } 
+ 
+            .product-price { 
+                font-size: 13px; 
+            } 
+ 
+            .product-description { 
+                font-size: 8px; 
+            } 
+ 
+            .product-source, 
+            .product-rating { 
+                font-size: 8px; 
+            } 
+ 
+            .view-product-btn { 
+                padding: 8px; 
+ 
+                font-size: 8px; 
+            } 
+ 
+ 
+            /* EXAMPLES */ 
+ 
+            .examples { 
+                overflow-x: auto; 
+ 
+                flex-wrap: nowrap; 
+ 
+                justify-content: flex-start; 
+ 
+                padding-bottom: 5px; 
+            } 
+ 
+            .example-btn { 
+                white-space: nowrap; 
+            } 
+ 
+ 
+            /* BOTTOM NAV */ 
+ 
+            .mobile-bottom-nav { 
+                position: fixed; 
+ 
+                left: 10px; 
+                right: 10px; 
+                bottom: 10px; 
+ 
+                height: 58px; 
+ 
+                display: flex; 
+ 
+                align-items: center; 
+ 
+                justify-content: space-around; 
+ 
+                z-index: 250; 
+ 
+                background: 
+                    rgba(255,255,255,.96); 
+ 
+                border: 
+                    1px solid 
+                    #e1e6f0; 
+ 
+                border-radius: 18px; 
+ 
+                box-shadow: 
+                    0 10px 35px 
+                    rgba(30,50,110,.16); 
+ 
+                backdrop-filter: blur(15px); 
+            } 
+ 
+            .mobile-bottom-nav button { 
+                border: none; 
+ 
+                background: transparent; 
+ 
+                color: #77839a; 
+ 
+                font-size: 10px; 
+ 
+                font-weight: 700; 
+ 
+                display: flex; 
+ 
+                flex-direction: column; 
+ 
+                align-items: center; 
+ 
+                gap: 3px; 
+            } 
+ 
+            .mobile-bottom-nav button.active { 
+                color: #5145d7; 
+            } 
+ 
+        } 
+ 
+ 
+        /* ========================================================= 
+           DESKTOP MOBILE NAV HIDDEN 
+        ========================================================= */ 
+ 
+        .mobile-bottom-nav { 
+            display: none; 
+        } 
+ 
+        @media (max-width: 650px) { 
+ 
+            .mobile-bottom-nav { 
+                display: flex; 
+            } 
+ 
+        } 
+ 
+ 
+        /* ========================================================= 
+           DARK MODE 
+        ========================================================= */ 
+ 
+        body.dark-mode { 
+            background: #0d1428; 
+ 
+            color: #f4f7ff; 
+        } 
+ 
+        body.dark-mode .topbar, 
+        body.dark-mode .sidebar, 
+        body.dark-mode .search-panel, 
+        body.dark-mode .category-card, 
+        body.dark-mode .popular-chip, 
+        body.dark-mode .product-card, 
+        body.dark-mode .page-card, 
+        body.dark-mode #loading, 
+        body.dark-mode .omniai-empty-state, 
+        body.dark-mode .omniai-error-state, 
+        body.dark-mode .omniai-loading-message, 
+        body.dark-mode .mobile-bottom-nav { 
+            background: #151e36; 
+ 
+            color: #f4f7ff; 
+ 
+            border-color: #293552; 
+        } 
+ 
+        body.dark-mode .hero h2, 
+        body.dark-mode .category-card h3, 
+        body.dark-mode .results-title, 
+        body.dark-mode .page-card h2, 
+        body.dark-mode .brand { 
+            color: #f4f7ff; 
+        } 
+ 
+        body.dark-mode .hero p, 
+        body.dark-mode .category-card p, 
+        body.dark-mode .page-card p, 
+        body.dark-mode .product-description, 
+        body.dark-mode .product-source, 
+        body.dark-mode .product-rating { 
+            color: #aab6ce; 
+        } 
+ 
+        body.dark-mode #userRequest { 
+            color: white; 
+        } 
+ 
+        body.dark-mode #userRequest::placeholder { 
+            color: #8290ad; 
+        } 
+ 
+    </style> 
+</head> 
+ 
+ 
+<body> 
+ 
+ 
+    <!-- ========================================================= 
+         LOGIN SCREEN 
+    ========================================================= --> 
+ 
+    <section id="loginScreen"> 
+ 
+        <div class="login-wrapper"> 
+ 
+ 
+            <!-- LEFT SIDE --> 
+ 
+            <div class="login-left"> 
+ 
+                <div class="login-brand"> 
+ 
+                    <div class="login-brand-icon"> 
+                        ✦ 
+                    </div> 
+ 
+                    OmniAI 
+ 
+                </div> 
+ 
+ 
+                <h1> 
+                    Smart Recommendations 
+                    <span>for Your Everyday Life</span> 
+                </h1> 
+ 
+ 
+                <p> 
+                    Discover smarter choices with one 
+                    intelligent AI recommendation agent. 
+                    Fashion, food, electronics and more — 
+                    all in one place. 
+                </p> 
+ 
+ 
+                <div class="login-features"> 
+ 
+                    <div class="login-feature"> 
+ 
+                        <div class="login-feature-icon"> 
+                            🍴 
+                        </div> 
+ 
+                        <strong> 
+                            Food 
+                        </strong> 
+ 
+                        <small> 
+                            Cravings to Cuisine 
+                        </small> 
+ 
+                    </div> 
+ 
+ 
+                    <div class="login-feature"> 
+ 
+                        <div class="login-feature-icon"> 
+                            👗 
+                        </div> 
+ 
+                        <strong> 
+                            Fashion 
+                        </strong> 
+ 
+                        <small> 
+                            Style for Everyone 
+                        </small> 
+ 
+                    </div> 
+ 
+ 
+                    <div class="login-feature"> 
+ 
+                        <div class="login-feature-icon"> 
+                            🎧 
+                        </div> 
+ 
+                        <strong> 
+                            Electronics 
+                        </strong> 
+ 
+                        <small> 
+                            Latest Tech 
+                        </small> 
+ 
+                    </div> 
+ 
+                </div> 
+ 
+ 
+                <div class="login-tagline"> 
+                    One AI. Endless Possibilities. 
+                </div> 
+ 
+            </div> 
+ 
+ 
+            <!-- RIGHT SIDE --> 
+ 
+            <div class="login-right"> 
+ 
+                <div class="login-form"> 
+ 
+                    <h2> 
+                        Welcome to OmniAI 
+                    </h2> 
+ 
+                    <p class="login-form-subtitle"> 
+                        Enter your phone number or email to continue 
+                    </p> 
+ 
+ 
+                    <div class="login-input-wrapper"> 
+ 
+                        <span class="login-input-icon"> 
+                            ♙ 
+                        </span> 
+ 
+                        <input 
+                            type="text" 
+                            id="loginInput" 
+                            placeholder="Phone number or Email" 
+                            autocomplete="email" 
+                        > 
+ 
+                    </div> 
+ 
+ 
+                    <button 
+                        type="button" 
+                        id="continueBtn" 
+                    > 
+                        Continue&nbsp; → 
+                    </button> 
+ 
+ 
+                    <div class="terms"> 
+                        By continuing, you agree to our 
+                        Terms & Privacy Policy 
+                    </div> 
+ 
+ 
+                    <div class="login-divider"> 
+                        or 
+                    </div> 
+ 
+ 
+                    <div class="social-buttons"> 
+ 
+                        <button 
+                            type="button" 
+                            id="googleLoginBtn" 
+                        > 
+                            🌈 Google 
+                        </button> 
+ 
+                        <button 
+                            type="button" 
+                            id="githubLoginBtn" 
+                        > 
+                             Continue with Apple 
+                        </button> 
+ 
+                    </div> 
+ 
+ 
+                    <div class="login-footer"> 
+                        New here? 
+                        <strong> 
+                            Learn more about OmniAI → 
+                        </strong> 
+                    </div> 
+ 
+                </div> 
+ 
+            </div> 
+ 
+        </div> 
+ 
+    </section> 
+ 
+ 
+ 
+    <!-- ========================================================= 
+         MAIN APPLICATION 
+    ========================================================= --> 
+ 
+    <section 
+        id="appScreen" 
+        class="hidden" 
+    > 
+ 
+ 
+        <!-- ===================================================== 
+             TOPBAR 
+        ====================================================== --> 
+ 
+        <header class="topbar"> 
+ 
+            <div class="brand"> 
+ 
+                <div class="brand-icon"> 
+                    ✦ 
+                </div> 
+ 
+                OmniAI 
+ 
+            </div> 
+ 
+ 
+            <div class="user-area"> 
+ 
+                <span> 
+                    Good Morning, 
+                    <strong id="welcomeName"> 
+                        User 
+                    </strong> 
+                    👋 
+                </span> 
+ 
+                <div class="user-avatar"> 
+                    M 
+                </div> 
+ 
+                <span id="profileName"> 
+                    User 
+                </span> 
+ 
+                <button 
+                    type="button" 
+                    id="logoutBtn" 
+                > 
+                    Logout 
+                </button> 
+ 
+            </div> 
+ 
+        </header> 
+ 
+ 
+ 
+        <!-- ===================================================== 
+             APP LAYOUT 
+        ====================================================== --> 
+ 
+        <div class="app-layout"> 
+ 
+ 
+            <!-- SIDEBAR --> 
+ 
+            <aside class="sidebar"> 
+ 
+                <button 
+                    type="button" 
+                    data-page="homePage" 
+                    class="active" 
+                > 
+                    🏠 
+                    <span>Home</span> 
+                </button> 
+ 
+ 
+                <button 
+                    type="button" 
+                    data-page="discoverPage" 
+                > 
+                    🔎 
+                    <span>Discover</span> 
+                </button> 
+ 
+ 
+                <button 
+                    type="button" 
+                    data-page="historyPage" 
+                > 
+                    🕘 
+                    <span>History</span> 
+                </button> 
+ 
+ 
+                <button 
+                    type="button" 
+                    data-page="savedPage" 
+                > 
+                    ♡ 
+                    <span>Saved</span> 
+                </button> 
+ 
+ 
+                <button 
+                    type="button" 
+                    data-page="settingsPage" 
+                > 
+                    ⚙ 
+                    <span>Settings</span> 
+                </button> 
+ 
+ 
+                <button 
+                    type="button" 
+                    id="mobileMenuBtn" 
+                > 
+                    ☰ 
+                    <span>Menu</span> 
+                </button> 
+ 
+            </aside> 
+ 
+ 
+ 
+            <!-- MAIN CONTENT --> 
+ 
+            <main class="main-content"> 
+ 
+ 
+                <!-- ================================================= 
+                     HOME PAGE 
+                ================================================== --> 
+ 
+                <section 
+                    id="homePage" 
+                    class="page active-page" 
+                > 
+ 
+ 
+                    <!-- HERO --> 
+ 
+                    <div class="hero"> 
+ 
+                        <div class="hero-badge"> 
+                            ✦ AI-POWERED PERSONAL RECOMMENDATIONS 
+                        </div> 
+ 
+                        <div class="hero-top"> 
+ 
+                            <div> 
+ 
+                                <!-- DYNAMIC USER NAME --> 
+ 
+                                <h2> 
+                                    Welcome to OmniAI,
+                                    <span class="gradient-text" id="heroUserName">User</span>
+                                    ✨
+                                </h2> 
+ 
+                                <p> 
+                                    Your intelligent recommendations, all in one place. 
+                                </p> 
+ 
+                                <p style="margin-top: 8px; font-weight: 700; color: #172554;"> 
+                                    What would you like to explore today? 
+                                </p> 
+ 
+                            </div> 
+ 
+                        </div> 
+ 
+                    </div> 
+ 
+ 
+ 
+                    <!-- ================================================= 
+                         CATEGORY CARDS 
+                    ================================================== --> 
+ 
+                    <div class="category-grid"> 
+ 
+ 
+                        <div 
+                            class="category-card fashion-card" 
+                            onclick="setExample('fashion')" 
+                        > 
+ 
+                            <div class="category-icon"> 
+                                👗 
+                            </div> 
+ 
+                            <h3> 
+                                Fashion 
+                            </h3> 
+ 
+                            <p> 
+                                Dress up your dreams 
+                            </p> 
+ 
+                            <div class="category-arrow"> 
+                                → 
+                            </div> 
+ 
+                        </div> 
+ 
+ 
+ 
+                        <div 
+                            class="category-card food-card" 
+                            onclick="setExample('food')" 
+                        > 
+ 
+                            <div class="category-icon"> 
+                                🍔 
+                            </div> 
+ 
+                            <h3> 
+                                Food 
+                            </h3> 
+ 
+                            <p> 
+                                Good food, good mood 
+                            </p> 
+ 
+                            <div class="category-arrow"> 
+                                → 
+                            </div> 
+ 
+                        </div> 
+ 
+ 
+ 
+                        <div 
+                            class="category-card electronics-card" 
+                            onclick="setExample('electronics')" 
+                        > 
+ 
+                            <div class="category-icon"> 
+                                🎧 
+                            </div> 
+ 
+                            <h3> 
+                                Electronics 
+                            </h3> 
+ 
+                            <p> 
+                                Smart tech for a smarter you 
+                            </p> 
+ 
+                            <div class="category-arrow"> 
+                                → 
+                            </div> 
+ 
+                        </div> 
+ 
+                    </div> 
+ 
+ 
+ 
+                    <!-- ================================================= 
+                         SEARCH PANEL 
+                    ================================================== --> 
+ 
+                    <div class="search-panel"> 
+ 
+                        <div class="search-box"> 
+ 
+ 
+                            <input 
+                                type="text" 
+                                id="userRequest" 
+                                placeholder="Tell me what you need... e.g. 'birthday dress under ₹2000'" 
+                                autocomplete="off" 
+                            > 
+ 
+ 
+                            <button 
+                                type="button" 
+                                id="micButton" 
+                                aria-label="Voice search" 
+                                title="Voice search" 
+                            > 
+                                🎤 
+                            </button> 
+ 
+ 
+                            <button 
+                                type="button" 
+                                id="searchButton" 
+                            > 
+                                🔍 Find Recommendations 
+                            </button> 
+ 
+                        </div> 
+ 
+ 
+                        <div class="budget-area"> 
+ 
+                            <input 
+                                type="number" 
+                                id="minPrice" 
+                                min="0" 
+                                placeholder="Min ₹" 
+                            > 
+ 
+                            <input 
+                                type="number" 
+                                id="maxPrice" 
+                                min="0" 
+                                placeholder="Max ₹" 
+                            > 
+ 
+                            <button 
+                                type="button" 
+                                id="applyBudgetBtn" 
+                            > 
+                                Apply Budget 
+                            </button> 
+ 
+                        </div> 
+ 
+                    </div> 
+ 
+ 
+ 
+                    <!-- ================================================= 
+                         POPULAR SEARCHES 
+                    ================================================== --> 
+ 
+                    <div class="popular-searches"> 
+ 
+                        <h3> 
+                            Popular Searches 
+                        </h3> 
+ 
+                        <div class="popular-list"> 
+ 
+                            <button 
+                                type="button" 
+                                class="popular-chip" 
+                                onclick="quickSearch('Birthday dress under ₹2000')" 
+                            > 
+                                Birthday dress under ₹2000 
+                            </button> 
+ 
+                            <button 
+                                type="button" 
+                                class="popular-chip" 
+                                onclick="quickSearch('Spicy food near me')" 
+                            > 
+                                Spicy food near me 
+                            </button> 
+ 
+                            <button 
+                                type="button" 
+                                class="popular-chip" 
+                                onclick="quickSearch('Wireless earbuds under ₹3000')" 
+                            > 
+                                Wireless earbuds under ₹3000 
+                            </button> 
+ 
+                            <button 
+                                type="button" 
+                                class="popular-chip" 
+                                onclick="quickSearch('Best restaurants')" 
+                            > 
+                                Best restaurants 
+                            </button> 
+ 
+                            <button 
+                                type="button" 
+                                class="popular-chip" 
+                                onclick="quickSearch('Latest smartphones')" 
+                            > 
+                                Latest phones 
+                            </button> 
+ 
+                        </div> 
+ 
+                    </div> 
+ 
+ 
+ 
+                    <!-- ================================================= 
+                         EXAMPLES 
+                    ================================================== --> 
+ 
+                    <div class="examples"> 
+ 
+                        <button 
+                            type="button" 
+                            class="example-btn" 
+                            onclick="setExample('fashion')" 
+                        > 
+                            👗 Fashion 
+                        </button> 
+ 
+                        <button 
+                            type="button" 
+                            class="example-btn" 
+                            onclick="setExample('food')" 
+                        > 
+                            🍔 Food 
+                        </button> 
+ 
+                        <button 
+                            type="button" 
+                            class="example-btn" 
+                            onclick="setExample('electronics')" 
+                        > 
+                            🎧 Electronics 
+                        </button> 
+ 
+                    </div> 
+ 
+ 
+ 
+                    <!-- ================================================= 
+                         LOADING 
+                    ================================================== --> 
+ 
+                    <div 
+                        id="loading" 
+                        class="hidden" 
+                    > 
+ 
+                        <div class="spinner"></div> 
+ 
+                        ✨ OmniAI is thinking... 
+ 
+                        <p> 
+                            Understanding your request, 
+                            finding suitable options and 
+                            checking prices & ratings. 
+                        </p> 
+ 
+                    </div> 
+ 
+ 
+ 
+                    <!-- ================================================= 
+                         RESULTS 
+                    ================================================== --> 
+ 
+                    <section 
+                        id="results-section" 
+                        class="hidden" 
+                    > 
+ 
+                        <div class="results-header"> 
+ 
+                            <h2 class="results-title"> 
+                                ✨ Your Recommendations 
+                            </h2> 
+ 
+                        </div> 
+ 
+ 
+                        <div id="resultsContainer"> 
+                        </div> 
+ 
+                    </section> 
+ 
+                </section> 
+ 
+ 
+ 
+                <!-- ================================================= 
+                     DISCOVER PAGE 
+                ================================================== --> 
+ 
+                <section 
+                    id="discoverPage" 
+                    class="page hidden" 
+                > 
+ 
+                    <div class="page-card"> 
+ 
+                        <h2> 
+                            🔎 Discover 
+                        </h2> 
+ 
+                        <p> 
+                            Explore intelligent recommendations 
+                            across fashion, food and electronics. 
+                        </p> 
+ 
+                        <br> 
+ 
+                        <button 
+                            type="button" 
+                            onclick="goHome()" 
+                        > 
+                            Start Exploring 
+                        </button> 
+ 
+                    </div> 
+ 
+                </section> 
+ 
+ 
+ 
+                <!-- ================================================= 
+                     HISTORY PAGE 
+                ================================================== --> 
+ 
+                <section 
+                    id="historyPage" 
+                    class="page hidden" 
+                > 
+ 
+                    <div class="page-card"> 
+ 
+                        <h2> 
+                            🕘 Search History 
+                        </h2> 
+ 
+                        <p> 
+                            Your recent OmniAI searches 
+                            will appear here. 
+                        </p> 
+ 
+                        <br> 
+ 
+                        <div id="historyContainer"> 
+                        </div> 
+ 
+                    </div> 
+ 
+                </section> 
+ 
+ 
+ 
+                <!-- ================================================= 
+                     SAVED PAGE 
+                ================================================== --> 
+ 
+                <section 
+                    id="savedPage" 
+                    class="page hidden" 
+                > 
+ 
+                    <div class="page-card"> 
+ 
+                        <h2> 
+                            ♡ Saved Recommendations 
+                        </h2> 
+ 
+                        <p> 
+                            Products you save will appear here. 
+                        </p> 
+ 
+                        <br> 
+ 
+                        <div id="savedContainer"> 
+                        </div> 
+ 
+                    </div> 
+ 
+                </section> 
+ 
+ 
+ 
+                <!-- ================================================= 
+                     SETTINGS PAGE 
+                ================================================== --> 
+ 
+                <section 
+                    id="settingsPage" 
+                    class="page hidden" 
+                > 
+ 
+                    <div class="page-card"> 
+ 
+                        <h2> 
+                            ⚙ Settings 
+                        </h2> 
+ 
+                        <p> 
+                            Manage your OmniAI preferences. 
+                        </p> 
+ 
+                        <br> 
+ 
+                        <button 
+                            type="button" 
+                            id="settingsThemeBtn" 
+                        > 
+                            🌙 Toggle Theme 
+                        </button> 
+ 
+                        <br><br> 
+ 
+                        <button 
+                            type="button" 
+                            id="themeToggle" 
+                        > 
+                            Change Theme 
+                        </button> 
+ 
+                        <br><br> 
+ 
+                        <p> 
+                            Voice Support: 
+                            <strong id="voiceSupportStatus"> 
+                                Checking... 
+                            </strong> 
+                        </p> 
+ 
+                        <br> 
+ 
+                        <button 
+                            type="button" 
+                            id="clearDataBtn" 
+                        > 
+                            🗑 Clear Saved Data 
+                        </button> 
+ 
+                    </div> 
+ 
+                </section> 
+ 
+            </main> 
+ 
+        </div> 
+ 
+ 
+ 
+        <!-- ========================================================= 
+             MOBILE BOTTOM NAVIGATION 
+        ========================================================== --> 
+ 
+        <nav class="mobile-bottom-nav"> 
+ 
+            <button 
+                type="button" 
+                data-page="homePage" 
+                class="active" 
+            > 
+                🏠 
+                <span>Home</span> 
+            </button> 
+ 
+            <button 
+                type="button" 
+                data-page="discoverPage" 
+            > 
+                🔎 
+                <span>Discover</span> 
+            </button> 
+ 
+            <button 
+                type="button" 
+                data-page="savedPage" 
+            > 
+                ♡ 
+                <span>Saved</span> 
+            </button> 
+ 
+            <button 
+                type="button" 
+                data-page="settingsPage" 
+            > 
+                👤 
+                <span>Profile</span> 
+            </button> 
+ 
+        </nav> 
+ 
+    </section> 
+ 
+ 
+ 
+    <!-- ========================================================= 
+         IMPORTANT: 
+         ONLY script.js HERE. 
+         DO NOT PUT THE LOGIN JAVASCRIPT HERE. 
+    ========================================================== --> 
+ 
+    <script src="script.js"></script> 
+ 
+</body> 
+ 
 </html>

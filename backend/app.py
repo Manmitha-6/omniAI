@@ -2,7 +2,13 @@
 # OMNIAI - FLASK BACKEND
 # ============================================================
 
-from flask import Flask, request, jsonify, send_from_directory
+from flask import (
+    Flask,
+    request,
+    jsonify,
+    send_from_directory
+)
+
 from flask_cors import CORS
 
 from agent import understand_request
@@ -11,11 +17,10 @@ from shopping import search_products
 import os
 
 
-# ============================================================
-# APP CONFIGURATION
-# ============================================================
+# ------------------------------------------------------------
+# FRONTEND LOCATION
+# ------------------------------------------------------------
 
-# Frontend folder is one level above backend
 FRONTEND_FOLDER = os.path.abspath(
     os.path.join(
         os.path.dirname(__file__),
@@ -25,19 +30,21 @@ FRONTEND_FOLDER = os.path.abspath(
 )
 
 
+# ------------------------------------------------------------
+# FLASK APP
+# ------------------------------------------------------------
+
 app = Flask(
     __name__,
     static_folder=FRONTEND_FOLDER
 )
 
-
-# Allow frontend requests
 CORS(app)
 
 
-# ============================================================
-# FRONTEND - HOME PAGE
-# ============================================================
+# ------------------------------------------------------------
+# HOME
+# ------------------------------------------------------------
 
 @app.route("/")
 def home():
@@ -48,9 +55,9 @@ def home():
     )
 
 
-# ============================================================
+# ------------------------------------------------------------
 # STATIC FILES
-# ============================================================
+# ------------------------------------------------------------
 
 @app.route("/<path:path>")
 def static_files(path):
@@ -61,9 +68,9 @@ def static_files(path):
     )
 
 
-# ============================================================
-# RECOMMENDATION API
-# ============================================================
+# ------------------------------------------------------------
+# OMNIAI RECOMMENDATION API
+# ------------------------------------------------------------
 
 @app.route(
     "/api/recommend",
@@ -73,38 +80,26 @@ def recommend():
 
     try:
 
-        # ----------------------------------------------------
-        # GET JSON DATA
-        # ----------------------------------------------------
-
         data = request.get_json(
             silent=True
         )
 
-
-        # Check JSON
 
         if not data:
 
             return jsonify({
 
                 "error":
-                    "Invalid request. JSON data is required."
+                "Invalid request. JSON data is required."
 
             }), 400
 
-
-        # ----------------------------------------------------
-        # GET USER REQUEST
-        # ----------------------------------------------------
 
         user_request = data.get(
             "request",
             ""
         )
 
-
-        # Make sure it is a string
 
         if not isinstance(
             user_request,
@@ -114,26 +109,20 @@ def recommend():
             return jsonify({
 
                 "error":
-                    "Request must be text."
+                "Request must be text."
 
             }), 400
 
 
-        # Remove extra spaces
-
         user_request = user_request.strip()
 
-
-        # ----------------------------------------------------
-        # EMPTY REQUEST
-        # ----------------------------------------------------
 
         if not user_request:
 
             return jsonify({
 
                 "error":
-                    "Please enter a product request."
+                "Please enter a product request."
 
             }), 400
 
@@ -142,14 +131,20 @@ def recommend():
         print("=" * 60)
         print("OMNIAI REQUEST")
         print("=" * 60)
-        print("User:", user_request)
+
+        print(
+            "User:",
+            user_request
+        )
 
 
-        # ====================================================
-        # STEP 1 - UNDERSTAND USER REQUEST
-        # ====================================================
+        # ----------------------------------------------------
+        # STEP 1 - UNDERSTAND REQUEST
+        # ----------------------------------------------------
 
-        print("\n[1] Understanding user request...")
+        print(
+            "\n[1] Understanding user request..."
+        )
 
 
         info = understand_request(
@@ -157,23 +152,26 @@ def recommend():
         )
 
 
-        print("\nFINAL AI UNDERSTANDING:")
+        print(
+            "\nFINAL AI UNDERSTANDING:"
+        )
+
         print(info)
 
 
-        # ====================================================
-        # STEP 2 - SEARCH REAL PRODUCTS
-        # ====================================================
+        # ----------------------------------------------------
+        # STEP 2 - REAL SEARCH
+        # ----------------------------------------------------
 
-        print("\n[2] Searching real data...")
+        print(
+            "\n[2] Searching real data..."
+        )
 
 
         products = search_products(
             info
         )
 
-
-        # Make sure products is a list
 
         if products is None:
 
@@ -185,9 +183,9 @@ def recommend():
         )
 
 
-        # ====================================================
-        # STEP 3 - NO RESULTS
-        # ====================================================
+        # ----------------------------------------------------
+        # NO RESULTS
+        # ----------------------------------------------------
 
         if len(products) == 0:
 
@@ -201,34 +199,28 @@ def recommend():
             return jsonify({
 
                 "message":
-                    "No real results were found. "
-                    "Try another product, budget, "
-                    "brand or preference.",
+                "No real results were found. "
+                "Try another product, budget, "
+                "brand or preference.",
 
                 "understanding":
-                    info,
+                info,
 
                 "count":
-                    0,
+                0,
 
                 "products":
-                    []
+                []
 
             }), 200
 
 
-        # ====================================================
-        # STEP 4 - LIMIT RESULTS
-        # ====================================================
-
-        # OmniAI displays the top 20 results
+        # ----------------------------------------------------
+        # LIMIT RESULTS
+        # ----------------------------------------------------
 
         products = products[:20]
 
-
-        # ====================================================
-        # STEP 5 - RETURN RESULTS
-        # ====================================================
 
         print(
             f"Returning {len(products)} recommendations."
@@ -237,23 +229,27 @@ def recommend():
         print("=" * 60)
 
 
+        # ----------------------------------------------------
+        # RESPONSE
+        # ----------------------------------------------------
+
         return jsonify({
 
             "understanding":
-                info,
+            info,
 
             "count":
-                len(products),
+            len(products),
 
             "products":
-                products
+            products
 
         }), 200
 
 
-    # ========================================================
-    # GENERAL SERVER ERROR
-    # ========================================================
+    # --------------------------------------------------------
+    # ERROR
+    # --------------------------------------------------------
 
     except Exception as error:
 
@@ -273,18 +269,17 @@ def recommend():
         return jsonify({
 
             "error":
-                "Something went wrong while processing "
-                "your request.",
+            "Something went wrong while processing your request.",
 
             "details":
-                str(error)
+            str(error)
 
         }), 500
 
 
-# ============================================================
+# ------------------------------------------------------------
 # HEALTH CHECK
-# ============================================================
+# ------------------------------------------------------------
 
 @app.route(
     "/api/health",
@@ -295,26 +290,28 @@ def health():
     return jsonify({
 
         "status":
-            "online",
+        "online",
 
         "agent":
-            "OmniAI",
+        "OmniAI",
 
         "message":
-            "OmniAI backend is running successfully."
+        "OmniAI backend is running successfully."
 
     })
 
 
-# ============================================================
+# ------------------------------------------------------------
 # RUN SERVER
-# ============================================================
+# ------------------------------------------------------------
 
 if __name__ == "__main__":
 
     print("\n")
     print("=" * 60)
-    print("        OMNIAI INTELLIGENT RECOMMENDATION AGENT")
+    print(
+        "        OMNIAI INTELLIGENT RECOMMENDATION AGENT"
+    )
     print("=" * 60)
 
     print(
@@ -333,9 +330,11 @@ if __name__ == "__main__":
     )
 
     print("=" * 60)
+
     print(
         "Starting Flask server..."
     )
+
     print("=" * 60)
     print("\n")
 
@@ -347,5 +346,4 @@ if __name__ == "__main__":
         port=5000,
 
         debug=True
-
     )

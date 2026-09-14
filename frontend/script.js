@@ -1,1328 +1,830 @@
-// =====================================================
+// ============================================================
 // OMNIAI - FRONTEND JAVASCRIPT
-// =====================================================
+// ============================================================
 
+document.addEventListener("DOMContentLoaded", function () {
 
-// =====================================================
-// QUICK EXAMPLES
-// =====================================================
+    console.log("🚀 OmniAI frontend starting...");
 
-function setExample(type) {
+    // ============================================================
+    // GET ELEMENTS
+    // ============================================================
 
-    const input = document.getElementById("userRequest");
-
-    if (!input) return;
-
-    const examples = {
-
-        fashion:
-            "I want a stylish birthday dress under ₹2000 from Myntra",
-
-        electronics:
-            "I want a Samsung smartphone under ₹30000",
-
-        food:
-            "I want spicy biryani under ₹300",
-
-        mens:
-            "I want black men's heeled boots for a party under ₹3000"
-
-    };
-
-    input.value = examples[type] || "";
-
-    input.focus();
-
-}
-
-
-// =====================================================
-// FOCUS SEARCH
-// =====================================================
-
-function focusSearch() {
-
-    const input = document.getElementById("userRequest");
-
-    if (!input) return;
-
-    input.focus();
-
-    input.scrollIntoView({
-        behavior: "smooth",
-        block: "center"
-    });
-
-}
-
-
-// =====================================================
-// GET RECOMMENDATIONS
-// =====================================================
-
-async function getRecommendations() {
-
-    const input = document.getElementById("userRequest");
-    const results = document.getElementById("results");
+    const loginScreen = document.getElementById("loginScreen");
+    const appScreen = document.getElementById("appScreen");
+    const loginInput = document.getElementById("loginInput");
+    const continueBtn = document.getElementById("continueBtn");
+    const welcomeName = document.getElementById("welcomeName");
+    const profileName = document.getElementById("profileName");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const userRequest = document.getElementById("userRequest");
+    const searchButton = document.getElementById("searchButton");
+    const micButton = document.getElementById("micButton");
+    const minPrice = document.getElementById("minPrice");
+    const maxPrice = document.getElementById("maxPrice");
+    const applyBudgetBtn = document.getElementById("applyBudgetBtn");
     const loading = document.getElementById("loading");
-    const resultCount = document.getElementById("result-count");
-
-    if (!input || !results || !loading || !resultCount) {
-        console.error("Required HTML elements not found.");
-        return;
-    }
-
-    const userRequest = input.value.trim();
-
-    if (!userRequest) {
-        input.focus();
-        return;
-    }
-
-
-    // Clear previous results
-
-    results.innerHTML = "";
-    resultCount.innerHTML = "";
-
-
-    // Loading
-
-    loading.innerHTML = `
-        <div class="ai-loading">
-
-            <div class="loading-spinner"></div>
-
-            <div>
-                <strong>OmniAI is thinking...</strong>
-
-                <span>
-                    Finding the best real results for you
-                </span>
-            </div>
-
-        </div>
-    `;
-
-
-    try {
-
-        console.log("=================================");
-        console.log("OmniAI request:", userRequest);
-        console.log("Sending request to /api/recommend");
-        console.log("=================================");
-
-
-        // =================================================
-        // IMPORTANT:
-        // Backend route is /api/recommend
-        // =================================================
-
-        const response = await fetch("/api/recommend", {
-
-            method: "POST",
-
-            headers: {
-                "Content-Type": "application/json"
-            },
-
-            body: JSON.stringify({
-                request: userRequest
-            })
-
-        });
-
-
-        // Get response
-
-        const data = await response.json();
-
-
-        console.log("Backend status:", response.status);
-        console.log("Backend response:", data);
-
-
-        // Stop loading
-
-        loading.innerHTML = "";
-
-
-        // =================================================
-        // BACKEND ERROR
-        // =================================================
-
-        if (!response.ok) {
-
-            console.error(
-                "Backend error:",
-                data
-            );
-
-
-            results.innerHTML = `
-
-                <div class="no-results-card">
-
-                    <div class="no-results-icon">
-                        ⚠️
-                    </div>
-
-                    <h3>
-                        OmniAI encountered an error
-                    </h3>
-
-                    <p>
-                        ${escapeHTML(
-                            data.error ||
-                            data.message ||
-                            "Unable to process your request."
-                        )}
-                    </p>
-
-                    <button
-                        class="retry-button"
-                        type="button"
-                        onclick="focusSearch()"
-                    >
-                        Try Again
-                    </button>
-
-                </div>
-
-            `;
-
-            return;
-        }
-
-
-        // =================================================
-        // NO PRODUCTS
-        // =================================================
-
-        if (
-            !data.products ||
-            data.products.length === 0
-        ) {
-
-            console.log(
-                "No products returned by backend."
-            );
-
-
-            // Show what OmniAI understood
-
-            let understandingHTML = "";
-
-            if (data.understanding) {
-
-                const understanding =
-                    data.understanding;
-
-                understandingHTML = `
-
-                    <div class="understanding-card">
-
-                        <div class="understanding-header">
-
-                            <div class="understanding-icon">
-                                ✦
-                            </div>
-
-                            <div>
-
-                                <h3>
-                                    OmniAI understood your request
-                                </h3>
-
-                                <p>
-                                    But no real results were found.
-                                </p>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="understanding-details">
-
-                            <div class="understanding-item">
-
-                                <span>
-                                    Category
-                                </span>
-
-                                <strong>
-                                    ${escapeHTML(
-                                        understanding.category ||
-                                        "Not specified"
-                                    )}
-                                </strong>
-
-                            </div>
-
-
-                            <div class="understanding-item">
-
-                                <span>
-                                    Product
-                                </span>
-
-                                <strong>
-                                    ${escapeHTML(
-                                        understanding.product_type ||
-                                        "Not specified"
-                                    )}
-                                </strong>
-
-                            </div>
-
-
-                            ${
-                                understanding.budget
-                                ?
-                                `
-
-                                <div class="understanding-item">
-
-                                    <span>
-                                        Budget
-                                    </span>
-
-                                    <strong>
-                                        ${escapeHTML(
-                                            understanding.budget
-                                        )}
-                                    </strong>
-
-                                </div>
-
-                                `
-                                :
-                                ""
-                            }
-
-                        </div>
-
-                    </div>
-
-                `;
-
-            }
-
-
-            results.innerHTML = `
-
-                ${understandingHTML}
-
-                <div class="no-results-card">
-
-                    <div class="no-results-icon">
-                        🔍
-                    </div>
-
-                    <h3>
-                        No real recommendations found
-                    </h3>
-
-                    <p>
-                        ${
-                            escapeHTML(
-                                data.message ||
-                                "Try another product, budget, brand or preference."
-                            )
-                        }
-                    </p>
-
-                    <button
-                        class="retry-button"
-                        type="button"
-                        onclick="focusSearch()"
-                    >
-                        Try Again
-                    </button>
-
-                </div>
-
-            `;
-
-            return;
-        }
-
-
-        // =================================================
-        // RESULT COUNT
-        // =================================================
-
-        resultCount.innerHTML = `
-            ✨ ${data.products.length} recommendations found
-        `;
-
-
-        // =================================================
-        // OMNIAI UNDERSTANDING
-        // =================================================
-
-        if (data.understanding) {
-
-            const understanding =
-                data.understanding;
-
-            const info =
-                document.createElement("div");
-
-            info.className =
-                "understanding-card";
-
-
-            info.innerHTML = `
-
-                <div class="understanding-header">
-
-                    <div class="understanding-icon">
-                        ✦
-                    </div>
-
-                    <div>
-
-                        <h3>
-                            OmniAI understood your request
-                        </h3>
-
-                        <p>
-                            Here's what our AI identified
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <div class="understanding-details">
-
-
-                    <div class="understanding-item">
-
-                        <span>
-                            Category
-                        </span>
-
-                        <strong>
-                            ${escapeHTML(
-                                understanding.category ||
-                                "Not specified"
-                            )}
-                        </strong>
-
-                    </div>
-
-
-                    <div class="understanding-item">
-
-                        <span>
-                            Product
-                        </span>
-
-                        <strong>
-                            ${escapeHTML(
-                                understanding.product_type ||
-                                "Not specified"
-                            )}
-                        </strong>
-
-                    </div>
-
-
-                    ${
-                        understanding.budget
-                        ?
-                        `
-
-                        <div class="understanding-item">
-
-                            <span>
-                                Budget
-                            </span>
-
-                            <strong>
-                                ${escapeHTML(
-                                    understanding.budget
-                                )}
-                            </strong>
-
-                        </div>
-
-                        `
-                        :
-                        ""
-                    }
-
-
-                    ${
-                        understanding.brand
-                        ?
-                        `
-
-                        <div class="understanding-item">
-
-                            <span>
-                                Brand
-                            </span>
-
-                            <strong>
-                                ${escapeHTML(
-                                    understanding.brand
-                                )}
-                            </strong>
-
-                        </div>
-
-                        `
-                        :
-                        ""
-                    }
-
-
-                    ${
-                        understanding.platform
-                        ?
-                        `
-
-                        <div class="understanding-item">
-
-                            <span>
-                                Platform
-                            </span>
-
-                            <strong>
-                                ${escapeHTML(
-                                    understanding.platform
-                                )}
-                            </strong>
-
-                        </div>
-
-                        `
-                        :
-                        ""
-                    }
-
-                </div>
-
-            `;
-
-
-            results.appendChild(info);
-
-        }
-
-
-        // =================================================
-        // DISPLAY PRODUCTS
-        // =================================================
-
-        data.products.forEach(
-            (product, index) => {
-
-                const card =
-                    document.createElement("article");
-
-                card.className =
-                    "product";
-
-
-                // =================================================
-                // RANK
-                // =================================================
-
-                const rank = `
-
-                    <div class="product-rank">
-                        #${index + 1}
-                    </div>
-
-                `;
-
-
-                // =================================================
-                // IMAGE
-                // =================================================
-
-                let imageHTML;
-
-
-                if (product.image) {
-
-                    imageHTML = `
-
-                        <div class="product-image-wrapper">
-
-                            <img
-
-                                src="${escapeAttribute(
-                                    product.image
-                                )}"
-
-                                alt="${escapeAttribute(
-                                    product.title ||
-                                    "Recommended product"
-                                )}"
-
-                                loading="lazy"
-
-                                onerror="
-                                    this.style.display='none';
-                                    this.parentElement.classList.add('image-error');
-                                "
-
-                            >
-
-                            <div class="image-fallback">
-                                🛍️
-                            </div>
-
-                        </div>
-
-                    `;
-
-                }
-
-                else {
-
-                    imageHTML = `
-
-                        <div class="product-image-wrapper image-error">
-
-                            <div class="image-fallback">
-                                🛍️
-                            </div>
-
-                        </div>
-
-                    `;
-
-                }
-
-
-                // =================================================
-                // TITLE
-                // =================================================
-
-                const title =
-                    product.title ||
-                    "Recommended Product";
-
-
-                // =================================================
-                // PRICE
-                // =================================================
-
-                const price =
-                    product.price ||
-                    "Price unavailable";
-
-
-                // =================================================
-                // STORE
-                // =================================================
-
-                const store =
-                    product.store ||
-                    "Platform unavailable";
-
-
-                // =================================================
-                // RATING
-                // =================================================
-
-                let ratingHTML;
-
-
-                if (product.rating) {
-
-                    ratingHTML = `
-
-                        <span class="rating">
-
-                            <span class="star">
-                                ★
-                            </span>
-
-                            ${escapeHTML(
-                                product.rating
-                            )}
-
-                        </span>
-
-                    `;
-
-                }
-
-                else {
-
-                    ratingHTML = `
-
-                        <span class="muted">
-                            Not available
-                        </span>
-
-                    `;
-
-                }
-
-
-                // =================================================
-                // REVIEWS
-                // =================================================
-
-                const reviews =
-                    product.reviews
-                    ?
-                    `${product.reviews} reviews`
-                    :
-                    "No reviews";
-
-
-                // =================================================
-                // PRODUCT LINK
-                // =================================================
-
-                let linkHTML = "";
-
-
-                if (product.link) {
-
-                    linkHTML = `
-
-                        <a
-
-                            class="product-button"
-
-                            href="${escapeAttribute(
-                                product.link
-                            )}"
-
-                            target="_blank"
-
-                            rel="noopener noreferrer"
-
-                        >
-
-                            View Product
-
-                            <span>
-                                →
-                            </span>
-
-                        </a>
-
-                    `;
-
-                }
-
-
-                // =================================================
-                // PRODUCT CARD
-                // =================================================
-
-                card.innerHTML = `
-
-                    ${rank}
-
-                    ${imageHTML}
-
-
-                    <div class="product-content">
-
-
-                        <h3 class="product-title">
-
-                            ${escapeHTML(title)}
-
-                        </h3>
-
-
-                        <div class="product-price">
-
-                            ${escapeHTML(price)}
-
-                        </div>
-
-
-                        <div class="product-info">
-
-
-                            <div class="info-row">
-
-                                <span>
-                                    Store
-                                </span>
-
-                                <strong>
-                                    ${escapeHTML(store)}
-                                </strong>
-
-                            </div>
-
-
-                            <div class="info-row">
-
-                                <span>
-                                    Rating
-                                </span>
-
-                                ${ratingHTML}
-
-                            </div>
-
-
-                            <div class="info-row">
-
-                                <span>
-                                    Reviews
-                                </span>
-
-                                <strong>
-                                    ${escapeHTML(reviews)}
-                                </strong>
-
-                            </div>
-
-
-                        </div>
-
-
-                        ${linkHTML}
-
-
-                    </div>
-
-                `;
-
-
-                results.appendChild(card);
-
-            }
-        );
-
-
-        // =================================================
-        // SCROLL TO RESULTS
-        // =================================================
-
-        const resultsSection =
-            document.querySelector(
-                ".results-section"
-            );
-
-
-        if (resultsSection) {
-
-            setTimeout(() => {
-
-                resultsSection.scrollIntoView({
-
-                    behavior: "smooth",
-
-                    block: "start"
-
-                });
-
-            }, 150);
-
-        }
-
-    }
-
-
-    // =================================================
-    // FRONTEND ERROR
-    // =================================================
-
-    catch (error) {
-
-        console.error(
-            "❌ OmniAI request failed:",
-            error
-        );
-
-
-        loading.innerHTML = "";
-
-        resultCount.innerHTML = "";
-
-
-        results.innerHTML = `
-
-            <div class="no-results-card">
-
-                <div class="no-results-icon">
-                    ⚠️
-                </div>
-
-                <h3>
-                    Connection error
-                </h3>
-
-                <p>
-                    OmniAI could not connect to the backend.
-                    Please make sure Flask is running.
-                </p>
-
-                <button
-                    class="retry-button"
-                    type="button"
-                    onclick="focusSearch()"
-                >
-
-                    Try Again
-
-                </button>
-
-            </div>
-
-        `;
-
-    }
-
-}
-
-
-// =====================================================
-// VOICE INPUT
-// =====================================================
-
-let omniAIRecognition = null;
-
-let isListening = false;
-
-
-// =====================================================
-// START VOICE INPUT
-// =====================================================
-
-function startVoiceInput() {
+    const resultsSection = document.getElementById("results-section");
+    const resultsContainer = document.getElementById("resultsContainer");
+    const themeToggle = document.getElementById("themeToggle");
+    const settingsThemeBtn = document.getElementById("settingsThemeBtn");
+    const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+    const clearDataBtn = document.getElementById("clearDataBtn");
+    const voiceSupportStatus =
+        document.getElementById("voiceSupportStatus");
+
+    // ============================================================
+    // DEBUG - CHECK IMPORTANT ELEMENTS
+    // ============================================================
 
     console.log(
-        "🎤 Microphone button clicked"
+        "🔍 Search button:",
+        searchButton ? "FOUND" : "NOT FOUND"
     );
 
+    console.log(
+        "🎤 Microphone button:",
+        micButton ? "FOUND" : "NOT FOUND"
+    );
 
-    const input =
-        document.getElementById(
-            "userRequest"
-        );
+    console.log(
+        "📝 Search input:",
+        userRequest ? "FOUND" : "NOT FOUND"
+    );
 
-    const micButton =
-        document.getElementById(
-            "micButton"
-        );
+    // ============================================================
+    // LOGIN SYSTEM
+    // ============================================================
 
-    const voiceStatus =
-        document.getElementById(
-            "voiceStatus"
-        );
-
-    const languageSelect =
-        document.getElementById(
-            "languageSelect"
-        );
-
-
-    if (!input) {
-
-        console.error(
-            "❌ userRequest textarea not found"
-        );
-
-        return;
-
+    function isValidEmail(value) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
     }
 
+    function isValidMobile(value) {
+        let cleaned = value
+            .replace(/\s+/g, "")
+            .replace(/-/g, "");
 
-    // =================================================
-    // BROWSER SUPPORT
-    // =================================================
-
-    const SpeechRecognition =
-        window.SpeechRecognition ||
-        window.webkitSpeechRecognition;
-
-
-    if (!SpeechRecognition) {
-
-        if (voiceStatus) {
-
-            voiceStatus.textContent =
-                "❌ Voice input is not supported. Please use Google Chrome.";
-
+        if (cleaned.startsWith("+91")) {
+            cleaned = cleaned.substring(3);
         }
 
-        return;
+        if (cleaned.startsWith("91") && cleaned.length === 12) {
+            cleaned = cleaned.substring(2);
+        }
 
+        return /^[6-9]\d{9}$/.test(cleaned);
     }
 
+    // ============================================================
+    // ADDED: GET DISPLAY NAME FROM EMAIL
+    // ============================================================
 
-    // =================================================
-    // STOP CURRENT RECOGNITION
-    // =================================================
+    function getUserName(value) {
+        value = value.trim();
 
-    if (
-        isListening &&
-        omniAIRecognition
-    ) {
+        if (value.includes("@")) {
 
-        omniAIRecognition.stop();
+            let username = value
+                .split("@")[0]
+                .replace(/[._-]+/g, " ")
+                .replace(/[0-9]/g, "")
+                .trim();
 
-        return;
+            if (!username) {
+                return "OmniAI User";
+            }
 
+            return username
+                .split(/\s+/)
+                .filter(Boolean)
+                .map(function (word) {
+                    return (
+                        word.charAt(0).toUpperCase() +
+                        word.slice(1).toLowerCase()
+                    );
+                })
+                .join(" ");
+        }
+
+        return "OmniAI User";
     }
 
+    function showLoginError(message) {
+        if (!loginInput) {
+            alert(message);
+            return;
+        }
 
-    // =================================================
-    // CREATE RECOGNITION
-    // =================================================
+        loginInput.style.borderColor = "#ff4f8b";
 
-    omniAIRecognition =
-        new SpeechRecognition();
+        let error =
+            document.getElementById("loginError");
 
+        if (!error) {
+            error = document.createElement("div");
+            error.id = "loginError";
+            error.style.color = "#ff4f8b";
+            error.style.fontSize = "13px";
+            error.style.marginTop = "8px";
+            error.style.fontWeight = "600";
 
-    // =================================================
-    // LANGUAGE
-    // =================================================
+            if (loginInput.parentElement) {
+                loginInput.parentElement.appendChild(error);
+            }
+        }
 
-    const selectedLanguage =
-        languageSelect
-        ?
-        languageSelect.value
-        :
-        "en-IN";
+        error.textContent = message;
+        loginInput.focus();
+    }
 
+    function clearLoginError() {
+        if (!loginInput) return;
 
-    omniAIRecognition.lang =
-        selectedLanguage ||
-        "en-IN";
+        loginInput.style.borderColor = "";
 
+        const error =
+            document.getElementById("loginError");
 
-    // =================================================
-    // SETTINGS
-    // =================================================
+        if (error) {
+            error.remove();
+        }
+    }
 
-    omniAIRecognition.continuous =
-        false;
+    function login() {
 
-    omniAIRecognition.interimResults =
-        true;
+        if (!loginInput) return;
 
-    omniAIRecognition.maxAlternatives =
-        1;
+        const value =
+            loginInput.value.trim();
 
+        clearLoginError();
 
-    // =================================================
-    // START
-    // =================================================
-
-    omniAIRecognition.onstart =
-        function () {
-
-            console.log(
-                "🎙️ Voice recognition started"
+        if (!value) {
+            showLoginError(
+                "Please enter your email or mobile number."
             );
+            return;
+        }
 
+        const validEmail =
+            isValidEmail(value);
 
-            isListening = true;
+        const validMobile =
+            isValidMobile(value);
 
+        if (!validEmail && !validMobile) {
+            showLoginError(
+                "Enter a valid email address or Indian mobile number."
+            );
+            return;
+        }
 
-            if (micButton) {
+        const username =
+            getUserName(value);
 
-                micButton.classList.add(
-                    "listening"
-                );
-
-                micButton.setAttribute(
-                    "aria-label",
-                    "Stop voice input"
-                );
-
-            }
-
-
-            if (voiceStatus) {
-
-                voiceStatus.textContent =
-                    "🎙️ Listening... Speak now";
-
-            }
-
+        const user = {
+            login: value,
+            name: username,
+            loginTime:
+                new Date().toISOString()
         };
 
+        localStorage.setItem(
+            "omniaiUser",
+            JSON.stringify(user)
+        );
 
-    // =================================================
-    // RESULT
-    // =================================================
+        if (welcomeName) {
+            welcomeName.textContent = username;
+        }
 
-    omniAIRecognition.onresult =
-        function (event) {
+        if (profileName) {
+            profileName.textContent = username;
+        }
 
-            console.log(
-                "🗣️ Speech result received"
-            );
+        // ========================================================
+        // ADDED: UPDATE HERO NAME
+        // ========================================================
 
+        const heroUserName =
+            document.getElementById("heroUserName");
 
-            let transcript = "";
+        if (heroUserName) {
+            heroUserName.textContent = username;
+        }
 
+        // ========================================================
+        // ADDED: UPDATE USER AVATAR
+        // ========================================================
 
-            for (
-                let i = event.resultIndex;
-                i < event.results.length;
-                i++
-            ) {
+        const userAvatar =
+            document.querySelector(".user-avatar");
 
-                transcript +=
-                    event.results[i][0]
-                        .transcript;
+        if (userAvatar) {
+            userAvatar.textContent =
+                username.charAt(0).toUpperCase();
+        }
 
+        if (loginScreen) {
+            loginScreen.classList.add("hidden");
+        }
+
+        if (appScreen) {
+            appScreen.classList.remove("hidden");
+        }
+
+        setTimeout(function () {
+
+            if (userRequest) {
+                userRequest.focus();
             }
 
+        }, 300);
 
-            transcript =
-                transcript.trim();
+        console.log(
+            "✅ Login successful:",
+            username
+        );
+    }
 
+    if (continueBtn) {
 
-            console.log(
-                "📝 Transcript:",
-                transcript
-            );
+        continueBtn.addEventListener(
+            "click",
+            login
+        );
+    }
 
+    if (loginInput) {
 
-            if (transcript !== "") {
+        loginInput.addEventListener(
+            "keydown",
+            function (event) {
 
-                input.value =
-                    transcript;
+                if (event.key === "Enter") {
 
+                    event.preventDefault();
 
-                input.dispatchEvent(
-                    new Event(
-                        "input",
-                        {
-                            bubbles: true
-                        }
-                    )
-                );
-
-
-                input.focus();
-
-
-                input.setSelectionRange(
-                    input.value.length,
-                    input.value.length
-                );
-
-
-                if (voiceStatus) {
-
-                    voiceStatus.textContent =
-                        "✍️ " + transcript;
-
+                    login();
                 }
-
             }
+        );
+    }
 
-        };
+    // ============================================================
+    // RESTORE LOGIN
+    // ============================================================
 
+    function restoreUser() {
 
-    // =================================================
-    // END
-    // =================================================
+        const savedUser =
+            localStorage.getItem("omniaiUser");
 
-    omniAIRecognition.onend =
-        function () {
+        if (!savedUser) return;
 
-            console.log(
-                "🛑 Voice recognition ended"
-            );
+        try {
 
+            const user =
+                JSON.parse(savedUser);
 
-            isListening = false;
-
-
-            if (micButton) {
-
-                micButton.classList.remove(
-                    "listening"
-                );
-
-                micButton.setAttribute(
-                    "aria-label",
-                    "Start voice input"
-                );
-
-            }
-
-
-            if (input.value.trim()) {
-
-                if (voiceStatus) {
-
-                    voiceStatus.textContent =
-                        "✅ Speech added to search box";
-
-                }
-
-            }
-
-            else {
-
-                if (voiceStatus) {
-
-                    voiceStatus.textContent =
-                        "🎤 No speech detected. Click microphone and try again.";
-
-                }
-
-            }
-
-        };
-
-
-    // =================================================
-    // ERROR
-    // =================================================
-
-    omniAIRecognition.onerror =
-        function (event) {
-
-            console.error(
-                "❌ Speech recognition error:",
-                event.error
-            );
-
-
-            isListening = false;
-
-
-            if (micButton) {
-
-                micButton.classList.remove(
-                    "listening"
-                );
-
-                micButton.setAttribute(
-                    "aria-label",
-                    "Start voice input"
-                );
-
-            }
-
-
-            if (!voiceStatus) {
+            if (!user || !user.name) {
                 return;
             }
 
-
-            switch (event.error) {
-
-                case "not-allowed":
-
-                    voiceStatus.textContent =
-                        "🎤 Microphone permission denied. Allow microphone access in Chrome.";
-
-                    break;
-
-
-                case "no-speech":
-
-                    voiceStatus.textContent =
-                        "🔊 No speech detected. Speak clearly and try again.";
-
-                    break;
-
-
-                case "audio-capture":
-
-                    voiceStatus.textContent =
-                        "🎤 Microphone not found. Check your microphone.";
-
-                    break;
-
-
-                case "network":
-
-                    voiceStatus.textContent =
-                        "🌐 Voice recognition network error. Check your internet connection.";
-
-                    break;
-
-
-                case "aborted":
-
-                    voiceStatus.textContent =
-                        "🛑 Voice input stopped.";
-
-                    break;
-
-
-                default:
-
-                    voiceStatus.textContent =
-                        "❌ Voice input error: " +
-                        event.error;
-
+            if (welcomeName) {
+                welcomeName.textContent =
+                    user.name;
             }
 
-        };
+            if (profileName) {
+                profileName.textContent =
+                    user.name;
+            }
 
+            // ====================================================
+            // ADDED: RESTORE HERO NAME
+            // ====================================================
 
-    // =================================================
-    // START MICROPHONE
-    // =================================================
+            const heroUserName =
+                document.getElementById("heroUserName");
 
-    try {
+            if (heroUserName) {
+                heroUserName.textContent =
+                    user.name;
+            }
 
-        console.log(
-            "🎤 Starting microphone..."
-        );
+            // ====================================================
+            // ADDED: RESTORE AVATAR
+            // ====================================================
 
+            const userAvatar =
+                document.querySelector(".user-avatar");
 
-        omniAIRecognition.start();
+            if (userAvatar) {
+                userAvatar.textContent =
+                    user.name.charAt(0).toUpperCase();
+            }
 
-    }
+            if (loginScreen) {
+                loginScreen.classList.add("hidden");
+            }
 
-    catch (error) {
+            if (appScreen) {
+                appScreen.classList.remove("hidden");
+            }
 
-        console.error(
-            "❌ Could not start microphone:",
-            error
-        );
-
-
-        isListening = false;
-
-    }
-
-}
-
-
-// =====================================================
-// KEYBOARD SEARCH
-// =====================================================
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
-
-        const input =
-            document.getElementById(
-                "userRequest"
+            console.log(
+                "✅ User restored:",
+                user.name
             );
 
+        }
+        catch (error) {
 
-        if (!input) {
+            console.error(
+                "Login restore error:",
+                error
+            );
+
+            localStorage.removeItem(
+                "omniaiUser"
+            );
+        }
+    }
+
+    restoreUser();
+
+    // ============================================================
+    // LOGOUT
+    // ============================================================
+
+    if (logoutBtn) {
+
+        logoutBtn.addEventListener(
+            "click",
+            function () {
+
+                localStorage.removeItem(
+                    "omniaiUser"
+                );
+
+                location.reload();
+            }
+        );
+    }
+
+    // ============================================================
+    // SOCIAL LOGIN DEMO
+    // ============================================================
+
+    const googleLoginBtn =
+        document.getElementById("googleLoginBtn");
+
+    const githubLoginBtn =
+        document.getElementById("githubLoginBtn");
+
+    function socialLoginDemo() {
+
+        alert(
+            "Social login is currently a demo. Please use your email or mobile number."
+        );
+    }
+
+    if (googleLoginBtn) {
+
+        googleLoginBtn.addEventListener(
+            "click",
+            socialLoginDemo
+        );
+    }
+
+    if (githubLoginBtn) {
+
+        githubLoginBtn.addEventListener(
+            "click",
+            socialLoginDemo
+        );
+    }
+
+    // ============================================================
+    // EXAMPLE SEARCHES
+    // ============================================================
+
+    window.setExample = function (category) {
+
+        if (!userRequest) return;
+
+        let text = "";
+
+        if (category === "fashion") {
+
+            text =
+                "I want a stylish birthday dress under ₹2000 from Myntra";
+
+        }
+
+        else if (category === "food") {
+
+            text =
+                "I want spicy food under ₹300 in Hyderabad";
+
+        }
+
+        else if (category === "electronics") {
+
+            text =
+                "I want wireless earbuds under ₹3000";
+        }
+
+        userRequest.value = text;
+        userRequest.focus();
+    };
+
+    // ============================================================
+    // QUICK SEARCH
+    // ============================================================
+
+    window.quickSearch = function (text) {
+
+        if (!userRequest) return;
+
+        userRequest.value = text;
+        userRequest.focus();
+    };
+
+    // ============================================================
+    // NAVIGATION
+    // ============================================================
+
+    const pageButtons =
+        document.querySelectorAll("[data-page]");
+
+    const pages =
+        document.querySelectorAll(".page");
+
+    pageButtons.forEach(function (button) {
+
+        button.addEventListener(
+            "click",
+            function () {
+
+                const pageId =
+                    button.getAttribute("data-page");
+
+                pages.forEach(function (page) {
+
+                    page.classList.add("hidden");
+                });
+
+                const selectedPage =
+                    document.getElementById(pageId);
+
+                if (selectedPage) {
+
+                    selectedPage.classList.remove(
+                        "hidden"
+                    );
+
+                    selectedPage.classList.add(
+                        "active-page"
+                    );
+                }
+
+                document.body.classList.remove(
+                    "sidebar-open"
+                );
+            }
+        );
+    });
+
+    window.goHome = function () {
+
+        pages.forEach(function (page) {
+
+            page.classList.add("hidden");
+        });
+
+        const home =
+            document.getElementById("homePage");
+
+        if (home) {
+
+            home.classList.remove("hidden");
+        }
+
+        if (resultsSection) {
+
+            resultsSection.classList.add(
+                "hidden"
+            );
+        }
+
+        window.scrollTo({
+
+            top: 0,
+            behavior: "smooth"
+
+        });
+    };
+
+    // ============================================================
+    // MOBILE MENU
+    // ============================================================
+
+    if (mobileMenuBtn) {
+
+        mobileMenuBtn.addEventListener(
+            "click",
+            function () {
+
+                document.body.classList.toggle(
+                    "sidebar-open"
+                );
+            }
+        );
+    }
+
+    // ============================================================
+    // APPLY BUDGET
+    // ============================================================
+
+    if (applyBudgetBtn) {
+
+        applyBudgetBtn.addEventListener(
+            "click",
+            function () {
+
+                if (userRequest) {
+                    userRequest.focus();
+                }
+            }
+        );
+    }
+
+    // ============================================================
+    // SEARCH
+    // ============================================================
+
+    async function getRecommendations() {
+
+        if (!userRequest) {
+
+            console.error(
+                "❌ userRequest not found."
+            );
+
             return;
         }
 
+        const request =
+            userRequest.value.trim();
 
-        input.addEventListener(
+        if (!request) {
+
+            alert(
+                "Please tell OmniAI what you are looking for."
+            );
+
+            userRequest.focus();
+
+            return;
+        }
+
+        // --------------------------------------------------------
+        // SHOW LOADING
+        // --------------------------------------------------------
+
+        if (loading) {
+
+            loading.classList.remove(
+                "hidden"
+            );
+        }
+
+        if (resultsSection) {
+
+            resultsSection.classList.add(
+                "hidden"
+            );
+        }
+
+        if (resultsContainer) {
+
+            resultsContainer.innerHTML = "";
+        }
+
+        if (searchButton) {
+
+            searchButton.disabled = true;
+
+            searchButton.textContent =
+                "✨ Finding...";
+        }
+
+        try {
+
+            console.log(
+                "🔍 Sending request:",
+                request
+            );
+
+            // ----------------------------------------------------
+            // API REQUEST
+            // ----------------------------------------------------
+
+            const response =
+                await fetch(
+                    "/api/recommend",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body: JSON.stringify({
+
+                            request: request,
+
+                            min_price:
+                                minPrice &&
+                                minPrice.value
+                                    ? Number(
+                                        minPrice.value
+                                    )
+                                    : null,
+
+                            max_price:
+                                maxPrice &&
+                                maxPrice.value
+                                    ? Number(
+                                        maxPrice.value
+                                    )
+                                    : null
+                        })
+                    }
+                );
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Server returned HTTP " +
+                    response.status
+                );
+            }
+
+            const data =
+                await response.json();
+
+            console.log(
+                "📦 OmniAI response:",
+                data
+            );
+
+            // ----------------------------------------------------
+            // GET PRODUCTS
+            // ----------------------------------------------------
+
+            let products = [];
+
+            if (Array.isArray(data)) {
+
+                products = data;
+            }
+
+            else if (
+                Array.isArray(data.products)
+            ) {
+
+                products =
+                    data.products;
+            }
+
+            else if (
+                Array.isArray(data.recommendations)
+            ) {
+
+                products =
+                    data.recommendations;
+            }
+
+            else if (
+                Array.isArray(data.results)
+            ) {
+
+                products =
+                    data.results;
+            }
+
+            else if (
+                data.data &&
+                Array.isArray(data.data.products)
+            ) {
+
+                products =
+                    data.data.products;
+            }
+
+            // ----------------------------------------------------
+            // ERROR FROM BACKEND
+            // ----------------------------------------------------
+
+            if (data.error) {
+
+                showError(
+                    data.error
+                );
+
+                return;
+            }
+
+            if (!products.length) {
+
+                showEmptyState();
+
+                return;
+            }
+
+            // ----------------------------------------------------
+            // SAVE HISTORY
+            // ----------------------------------------------------
+
+            saveSearchHistory(
+                request
+            );
+
+            // ----------------------------------------------------
+            // DISPLAY RESULTS
+            // ----------------------------------------------------
+
+            renderProducts(products);
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "❌ Recommendation error:",
+                error
+            );
+
+            showError(
+                "OmniAI could not get recommendations right now. Please try again."
+            );
+        }
+
+        finally {
+
+            if (loading) {
+
+                loading.classList.add(
+                    "hidden"
+                );
+            }
+
+            if (searchButton) {
+
+                searchButton.disabled = false;
+
+                searchButton.textContent =
+                    "🔍 Find Recommendations";
+            }
+        }
+    }
+
+    // ============================================================
+    // SEARCH BUTTON
+    // ============================================================
+
+    if (searchButton) {
+
+        searchButton.addEventListener(
+            "click",
+            getRecommendations
+        );
+
+        console.log(
+            "✅ Search button connected."
+        );
+
+    }
+
+    else {
+
+        console.error(
+            "❌ searchButton not found."
+        );
+    }
+
+    // ============================================================
+    // ENTER TO SEARCH
+    // ============================================================
+
+    if (userRequest) {
+
+        userRequest.addEventListener(
             "keydown",
             function (event) {
 
@@ -1334,58 +836,883 @@ document.addEventListener(
                     event.preventDefault();
 
                     getRecommendations();
+                }
+            }
+        );
+    }
+
+    // ============================================================
+    // RENDER PRODUCTS
+    // ============================================================
+
+    function renderProducts(products) {
+
+        if (!resultsContainer) {
+
+            console.error(
+                "❌ resultsContainer not found."
+            );
+
+            return;
+        }
+
+        resultsContainer.innerHTML = "";
+
+        products.forEach(
+            function (product, index) {
+
+                // ------------------------------------------------
+                // BASIC PRODUCT INFORMATION
+                // ------------------------------------------------
+
+                const title =
+                    product.title ||
+                    product.name ||
+                    product.product_name ||
+                    "Recommended Product";
+
+                const price =
+                    product.price ??
+                    product.cost ??
+                    product.amount ??
+                    "Price unavailable";
+
+                const image =
+                    product.image ||
+                    product.thumbnail ||
+                    product.image_url ||
+                    "";
+
+                const link =
+                    product.product_link ||
+                    product.product_url ||
+                    product.link ||
+                    "#";
+
+                const source =
+                    product.source ||
+                    product.store ||
+                    product.platform ||
+                    "Online Store";
+
+                const rating =
+                    product.rating ??
+                    "";
+
+                const reviews =
+                    product.reviews ??
+                    "";
+
+                const category =
+                    product.category ||
+                    "Recommendation";
+
+                const description =
+                    product.description ||
+                    "Recommended by OmniAI based on your requirements.";
+
+                // ------------------------------------------------
+                // ADDRESS INFORMATION
+                // ------------------------------------------------
+
+                const address =
+                    product.address ||
+                    product.formatted_address ||
+                    product.location ||
+                    "";
+
+                // ------------------------------------------------
+                // DETECT LOCAL / RESTAURANT RESULT
+                // ------------------------------------------------
+
+                const sourceText =
+                    String(source).toLowerCase();
+
+                const categoryText =
+                    String(category).toLowerCase();
+
+                const titleText =
+                    String(title).toLowerCase();
+
+                const isLocal =
+                    sourceText.includes("google local") ||
+                    sourceText.includes("local") ||
+                    categoryText.includes("restaurant") ||
+                    categoryText.includes("food") ||
+                    titleText.includes("pizzeria") ||
+                    titleText.includes("pizza") ||
+                    titleText.includes("restaurant") ||
+                    titleText.includes("cafe") ||
+                    titleText.includes("café") ||
+                    titleText.includes("bakery") ||
+                    !!address;
+
+                // ------------------------------------------------
+                // CREATE CARD
+                // ------------------------------------------------
+
+                const card =
+                    document.createElement("article");
+
+                card.className =
+                    "product-card";
+
+                // ------------------------------------------------
+                // IMAGE HTML
+                // ------------------------------------------------
+
+                let imageHTML = "";
+
+                if (image) {
+
+                    imageHTML = `
+                        <img
+                            class="product-image"
+                            src="${escapeHtml(image)}"
+                            alt="${escapeHtml(title)}"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                        >
+                        <div
+                            class="product-placeholder"
+                            style="display:none;"
+                        >
+                            ✨
+                        </div>
+                    `;
+                }
+
+                else {
+
+                    imageHTML = `
+                        <div class="product-placeholder">
+                            ✨
+                        </div>
+                    `;
+                }
+
+                // ------------------------------------------------
+                // RESULT ACTION BUTTON
+                // ------------------------------------------------
+
+                let actionHTML = "";
+
+                if (isLocal) {
+
+                    let addressLink =
+                        product.maps_link ||
+                        product.google_maps_url ||
+                        product.directions_link ||
+                        "";
+
+                    if (!addressLink && link !== "#") {
+
+                        addressLink = link;
+                    }
+
+                    if (!addressLink && address) {
+
+                        addressLink =
+                            "https://www.google.com/maps/search/?api=1&query=" +
+                            encodeURIComponent(
+                                title + " " + address
+                            );
+                    }
+
+                    if (addressLink) {
+
+                        actionHTML = `
+                            <a
+                                class="view-product-btn"
+                                href="${escapeHtml(addressLink)}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                📍 View Address →
+                            </a>
+                        `;
+                    }
+
+                    else {
+
+                        actionHTML = `
+                            <button
+                                type="button"
+                                class="view-product-btn"
+                                disabled
+                            >
+                                📍 Address Unavailable
+                            </button>
+                        `;
+                    }
 
                 }
 
+                else {
+
+                    // ------------------------------------------------
+                    // NORMAL PRODUCT
+                    // ------------------------------------------------
+
+                    if (link && link !== "#") {
+
+                        actionHTML = `
+                            <a
+                                class="view-product-btn"
+                                href="${escapeHtml(link)}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                View Product →
+                            </a>
+                        `;
+                    }
+
+                    else {
+
+                        actionHTML = `
+                            <button
+                                type="button"
+                                class="view-product-btn"
+                                disabled
+                            >
+                                Product Link Unavailable
+                            </button>
+                        `;
+                    }
+                }
+
+                // ------------------------------------------------
+                // CARD HTML
+                // ------------------------------------------------
+
+                card.innerHTML = `
+                    <div class="product-image-wrapper">
+
+                        ${imageHTML}
+
+                        <div class="recommendation-number">
+                            #${index + 1}
+                        </div>
+
+                        <button
+                            type="button"
+                            class="save-product-btn"
+                            aria-label="Save product"
+                        >
+                            ♡
+                        </button>
+
+                    </div>
+
+                    <div class="product-content">
+
+                        <div class="product-category">
+                            ${escapeHtml(category)}
+                        </div>
+
+                        <h3 class="product-title">
+                            ${escapeHtml(title)}
+                        </h3>
+
+                        <p class="product-description">
+                            ${escapeHtml(description)}
+                        </p>
+
+                        <div class="product-price">
+
+                            ${
+                                typeof price === "number"
+                                    ? "₹" +
+                                      price.toLocaleString("en-IN")
+                                    : escapeHtml(String(price))
+                            }
+
+                        </div>
+
+                        <div class="product-source">
+                            🛍️ ${escapeHtml(String(source))}
+                        </div>
+
+                        ${
+                            rating
+                                ? `
+                                    <div class="product-rating">
+
+                                        ⭐ ${escapeHtml(String(rating))}
+
+                                        ${
+                                            reviews
+                                                ? " (" +
+                                                  escapeHtml(
+                                                      String(reviews)
+                                                  ) +
+                                                  " reviews)"
+                                                : ""
+                                        }
+
+                                    </div>
+                                  `
+                                : ""
+                        }
+
+                        ${actionHTML}
+
+                    </div>
+                `;
+
+                // ------------------------------------------------
+                // SAVE BUTTON
+                // ------------------------------------------------
+
+                const saveButton =
+                    card.querySelector(
+                        ".save-product-btn"
+                    );
+
+                if (saveButton) {
+
+                    saveButton.addEventListener(
+                        "click",
+                        function () {
+
+                            saveProduct(product);
+
+                            saveButton.classList.toggle(
+                                "saved"
+                            );
+
+                            saveButton.textContent =
+                                saveButton.classList.contains(
+                                    "saved"
+                                )
+                                    ? "♥"
+                                    : "♡";
+                        }
+                    );
+                }
+
+                resultsContainer.appendChild(
+                    card
+                );
             }
         );
 
+        if (resultsSection) {
+
+            resultsSection.classList.remove(
+                "hidden"
+            );
+
+            resultsSection.scrollIntoView({
+
+                behavior: "smooth",
+                block: "start"
+
+            });
+        }
+
+        console.log(
+            "✅ Displayed",
+            products.length,
+            "recommendations."
+        );
     }
-);
 
+    // ============================================================
+    // ESCAPE HTML
+    // ============================================================
 
-// =====================================================
-// HTML ESCAPE
-// =====================================================
+    function escapeHtml(value) {
 
-function escapeHTML(value) {
+        return String(value)
 
-    return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
 
-        .replace(
-            /&/g,
-            "&amp;"
-        )
+    // ============================================================
+    // EMPTY STATE
+    // ============================================================
 
-        .replace(
-            /</g,
-            "&lt;"
-        )
+    function showEmptyState() {
 
-        .replace(
-            />/g,
-            "&gt;"
-        )
+        if (!resultsContainer) return;
 
-        .replace(
-            /"/g,
-            "&quot;"
-        )
+        resultsContainer.innerHTML = `
 
-        .replace(
-            /'/g,
-            "&#039;"
+            <div class="omniai-empty-state">
+
+                <h2>
+                    🔎 No recommendations found
+                </h2>
+
+                <p>
+                    Try changing your search,
+                    budget or category.
+                </p>
+
+            </div>
+        `;
+
+        if (resultsSection) {
+
+            resultsSection.classList.remove(
+                "hidden"
+            );
+        }
+    }
+
+    // ============================================================
+    // ERROR STATE
+    // ============================================================
+
+    function showError(message) {
+
+        if (!resultsContainer) return;
+
+        resultsContainer.innerHTML = `
+
+            <div class="omniai-error-state">
+
+                <h2>
+                    ⚠️ OmniAI needs another try
+                </h2>
+
+                <p>
+                    ${escapeHtml(message)}
+                </p>
+
+                <button
+                    type="button"
+                    id="retrySearchBtn"
+                >
+                    Try Again
+                </button>
+
+            </div>
+        `;
+
+        if (resultsSection) {
+
+            resultsSection.classList.remove(
+                "hidden"
+            );
+        }
+
+        const retryButton =
+            document.getElementById(
+                "retrySearchBtn"
+            );
+
+        if (retryButton) {
+
+            retryButton.addEventListener(
+                "click",
+                getRecommendations
+            );
+        }
+    }
+
+    // ============================================================
+    // HISTORY
+    // ============================================================
+
+    function getCurrentUserKey() {
+
+        const savedUser =
+            localStorage.getItem("omniaiUser");
+
+        if (!savedUser) {
+
+            return "guest";
+        }
+
+        try {
+
+            const user =
+                JSON.parse(savedUser);
+
+            return (
+                user.login ||
+                user.name ||
+                "guest"
+            );
+        }
+
+        catch {
+
+            return "guest";
+        }
+    }
+
+    function saveSearchHistory(request) {
+
+        const key =
+            "omniai_history_" +
+            getCurrentUserKey();
+
+        let history = [];
+
+        try {
+
+            history =
+                JSON.parse(
+                    localStorage.getItem(key)
+                ) || [];
+        }
+
+        catch {
+
+            history = [];
+        }
+
+        history.unshift({
+
+            request: request,
+
+            time:
+                new Date().toISOString()
+        });
+
+        history =
+            history.slice(0, 30);
+
+        localStorage.setItem(
+            key,
+            JSON.stringify(history)
+        );
+    }
+
+    // ============================================================
+    // SAVE PRODUCTS
+    // ============================================================
+
+    function saveProduct(product) {
+
+        const key =
+            "omniai_saved_" +
+            getCurrentUserKey();
+
+        let saved = [];
+
+        try {
+
+            saved =
+                JSON.parse(
+                    localStorage.getItem(key)
+                ) || [];
+        }
+
+        catch {
+
+            saved = [];
+        }
+
+        saved.push(product);
+
+        localStorage.setItem(
+            key,
+            JSON.stringify(saved)
         );
 
-}
+        console.log(
+            "❤️ Product saved."
+        );
+    }
 
+    // ============================================================
+    // VOICE SEARCH
+    // ============================================================
 
-// =====================================================
-// ATTRIBUTE ESCAPE
-// =====================================================
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
 
-function escapeAttribute(value) {
+    if (voiceSupportStatus) {
 
-    return escapeHTML(value);
+        voiceSupportStatus.textContent =
+            SpeechRecognition
+                ? "Available"
+                : "Not supported";
+    }
 
-}
+    if (micButton) {
+
+        if (!SpeechRecognition) {
+
+            micButton.addEventListener(
+                "click",
+                function () {
+
+                    alert(
+                        "Voice search is not supported in this browser. Please use Google Chrome or Microsoft Edge."
+                    );
+                }
+            );
+
+        }
+
+        else {
+
+            const recognition =
+                new SpeechRecognition();
+
+            recognition.lang =
+                "en-IN";
+
+            recognition.continuous =
+                false;
+
+            recognition.interimResults =
+                true;
+
+            recognition.onstart =
+                function () {
+
+                    micButton.classList.add(
+                        "listening"
+                    );
+
+                    micButton.textContent =
+                        "🔴";
+
+                    console.log(
+                        "🎤 Listening..."
+                    );
+                };
+
+            recognition.onresult =
+                function (event) {
+
+                    let transcript = "";
+
+                    for (
+                        let i =
+                            event.resultIndex;
+
+                        i <
+                            event.results.length;
+
+                        i++
+                    ) {
+
+                        transcript +=
+                            event.results[i][0]
+                                .transcript;
+                    }
+
+                    if (userRequest) {
+
+                        userRequest.value =
+                            transcript;
+                    }
+                };
+
+            recognition.onend =
+                function () {
+
+                    micButton.classList.remove(
+                        "listening"
+                    );
+
+                    micButton.textContent =
+                        "🎤";
+
+                    console.log(
+                        "🎤 Voice input finished."
+                    );
+                };
+
+            recognition.onerror =
+                function (event) {
+
+                    micButton.classList.remove(
+                        "listening"
+                    );
+
+                    micButton.textContent =
+                        "🎤";
+
+                    console.error(
+                        "Voice error:",
+                        event.error
+                    );
+                };
+
+            micButton.addEventListener(
+                "click",
+                function () {
+
+                    try {
+
+                        recognition.start();
+
+                    }
+
+                    catch (error) {
+
+                        console.log(
+                            "Voice recognition already running."
+                        );
+                    }
+                }
+            );
+        }
+
+        console.log(
+            "🎤 Microphone button connected."
+        );
+
+    }
+
+    else {
+
+        console.error(
+            "❌ micButton not found."
+        );
+    }
+
+    // ============================================================
+    // THEME
+    // ============================================================
+
+    function toggleTheme() {
+
+        document.body.classList.toggle(
+            "dark-mode"
+        );
+
+        const isDark =
+            document.body.classList.contains(
+                "dark-mode"
+            );
+
+        localStorage.setItem(
+            "omniaiTheme",
+            isDark
+                ? "dark"
+                : "light"
+        );
+    }
+
+    if (themeToggle) {
+
+        themeToggle.addEventListener(
+            "click",
+            toggleTheme
+        );
+    }
+
+    if (settingsThemeBtn) {
+
+        settingsThemeBtn.addEventListener(
+            "click",
+            toggleTheme
+        );
+    }
+
+    const savedTheme =
+        localStorage.getItem(
+            "omniaiTheme"
+        );
+
+    if (savedTheme === "dark") {
+
+        document.body.classList.add(
+            "dark-mode"
+        );
+    }
+
+    // ============================================================
+    // CLEAR DATA
+    // ============================================================
+
+    if (clearDataBtn) {
+
+        clearDataBtn.addEventListener(
+            "click",
+            function () {
+
+                const confirmed =
+                    confirm(
+                        "Clear your OmniAI saved data and history?"
+                    );
+
+                if (!confirmed) return;
+
+                const userKey =
+                    getCurrentUserKey();
+
+                localStorage.removeItem(
+                    "omniai_history_" +
+                    userKey
+                );
+
+                localStorage.removeItem(
+                    "omniai_saved_" +
+                    userKey
+                );
+
+                alert(
+                    "✅ OmniAI saved data and history cleared."
+                );
+            }
+        );
+    }
+
+    // ============================================================
+    // GLOBAL FUNCTIONS
+    // ============================================================
+
+    window.getRecommendations =
+        getRecommendations;
+
+    window.startVoiceInput =
+        function () {
+
+            if (micButton) {
+
+                micButton.click();
+            }
+        };
+
+    // ============================================================
+    // FINAL STATUS
+    // ============================================================
+
+    console.log(
+        "✨ OmniAI frontend loaded successfully."
+    );
+
+    console.log(
+        "🎤 Voice support:",
+        SpeechRecognition
+            ? "Available"
+            : "Not supported"
+    );
+
+    console.log(
+        "🔍 Search button:",
+        searchButton
+            ? "FOUND"
+            : "NOT FOUND"
+    );
+
+    console.log(
+        "🎤 Microphone button:",
+        micButton
+            ? "FOUND"
+            : "NOT FOUND"
+    );
+
+    console.log(
+        "📝 Search input:",
+        userRequest
+            ? "FOUND"
+            : "NOT FOUND"
+    );
+
+});
